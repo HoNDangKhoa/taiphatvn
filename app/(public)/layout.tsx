@@ -2,6 +2,7 @@ import { CartProvider } from "@/components/cart/CartProvider";
 import { FloatDock } from "@/components/site/FloatDock";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { SiteHeader } from "@/components/site/SiteHeader";
+import { VisitBeacon } from "@/components/site/VisitBeacon";
 import { getBanner, getSettings } from "@/lib/queries";
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
@@ -16,6 +17,7 @@ export default async function PublicLayout({ children }: { children: React.React
         {children}
         <SiteFooter footer={banner.footer} settings={settings} />
         <FloatDock phone={settings.hotline || ""} zalo={settings.zalo || ""} messenger={settings.messenger || ""} />
+        <VisitBeacon />
       </div>
     </CartProvider>
   );

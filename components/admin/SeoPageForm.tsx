@@ -3,7 +3,7 @@
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { AdminCard, FormActionBar } from "@/components/admin/AdminChrome";
-import { ImageField } from "@/components/admin/HomeForms";
+import { ImageField } from "@/components/admin/ImageField";
 import { Input, Label, Textarea } from "@/components/ui/input";
 import { savePageSeo } from "@/lib/actions";
 import type { PageSeo } from "@/lib/home";

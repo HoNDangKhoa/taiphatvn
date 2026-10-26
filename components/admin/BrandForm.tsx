@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { AdminCard, AdminPageHeader, FormActionBar } from "@/components/admin/AdminChrome";
-import { ImageField } from "@/components/admin/HomeForms";
+import { ImageField } from "@/components/admin/ImageField";
 import { saveBrand } from "@/lib/actions";
 
 export function BrandForm({ title, field, initial }: { title: string; field: "logoUrl" | "faviconUrl"; initial: string }) {

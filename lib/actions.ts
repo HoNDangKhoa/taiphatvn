@@ -188,6 +188,21 @@ export async function saveProduct(formData: FormData) {
   redirect("/admin/products");
 }
 
+export async function toggleProduct(id: string, field: "visible" | "isNew", value: boolean) {
+  await requireAdmin();
+  await prisma.product.update({ where: { id }, data: { [field]: value } });
+  refresh();
+}
+
+export async function togglePost(id: string, field: "visible" | "isNew", value: boolean) {
+  await requireAdmin();
+  await prisma.post.update({
+    where: { id },
+    data: field === "visible" ? { status: value ? "PUBLISHED" : "DRAFT" } : { isNew: value },
+  });
+  refresh();
+}
+
 export async function deleteProducts(ids: string[]) {
   await requireAdmin();
   await prisma.product.deleteMany({ where: { id: { in: ids } } });

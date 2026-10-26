@@ -1,32 +1,29 @@
+import { Suspense } from "react";
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
 import { AdminCard, AdminPageHeader } from "@/components/admin/AdminChrome";
+import { DashboardAnalyticsPanel, QuickLinkCards } from "@/components/admin/DashboardAnalytics";
+import { getDashboardAnalytics } from "@/lib/analytics";
+import { prisma } from "@/lib/prisma";
 
-export default async function DashboardPage() {
-  const [products, posts, orders, contacts] = await Promise.all([
-    prisma.product.count(),
-    prisma.post.count({ where: { type: "NEWS" } }),
-    prisma.order.count(),
-    prisma.contactInquiry.count(),
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ month?: string; year?: string }>;
+}) {
+  const sp = await searchParams;
+  const month = Number(sp.month) || undefined;
+  const year = Number(sp.year) || undefined;
+  const [analytics, recent] = await Promise.all([
+    getDashboardAnalytics(month, year),
+    prisma.order.findMany({ orderBy: { createdAt: "desc" }, take: 5 }),
   ]);
-  const recent = await prisma.order.findMany({ orderBy: { createdAt: "desc" }, take: 5 });
-  const cards = [
-    { label: "Sản phẩm", value: products, href: "/admin/products" },
-    { label: "Tin tức", value: posts, href: "/admin/posts" },
-    { label: "Đơn đặt trà", value: orders, href: "/admin/orders" },
-    { label: "Liên hệ", value: contacts, href: "/admin/contacts" },
-  ];
   return (
     <div>
       <AdminPageHeader title="Bảng điều khiển" />
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {cards.map((c) => (
-          <Link key={c.href} href={c.href} className="rounded-2xl bg-white p-5 shadow-sm">
-            <p className="text-sm font-semibold text-ink/50">{c.label}</p>
-            <p className="mt-2 text-3xl font-semibold text-[#3f7d3a]">{c.value}</p>
-          </Link>
-        ))}
-      </div>
+      <QuickLinkCards />
+      <Suspense>
+        <DashboardAnalyticsPanel initial={analytics} />
+      </Suspense>
       <div className="mt-6">
         <AdminCard title="Đơn mới">
           {recent.length === 0 ? <p className="text-sm text-ink/50">Chưa có đơn.</p> : (

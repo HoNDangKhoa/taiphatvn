@@ -1,9 +1,15 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { AdminCard, FormActionBar } from "@/components/admin/AdminChrome";
-import { ImageField } from "@/components/admin/HomeForms";
+import { ImageField } from "@/components/admin/ImageField";
 import { Input, Label, Select, Textarea } from "@/components/ui/input";
+
+const RichEditor = dynamic(() => import("@/components/admin/RichEditor").then((m) => m.RichEditor), {
+  ssr: false,
+  loading: () => <div className="h-40 animate-pulse rounded-xl bg-black/5" />,
+});
 import { savePost } from "@/lib/actions";
 import { useState } from "react";
 
@@ -48,8 +54,8 @@ export function PostForm({
             </div>
           )}
           {type === "ABOUT" && <input type="hidden" name="status" value="PUBLISHED" />}
-          <div><Label>Tóm tắt</Label><Textarea name="summary" defaultValue={initial.summary} /></div>
-          <div><Label>Nội dung HTML</Label><Textarea name="contentHtml" rows={12} defaultValue={initial.contentHtml} /></div>
+          <RichEditor name="summary" label="Mô tả (vi)" defaultValue={initial.summary} height={220} />
+          <RichEditor name="contentHtml" label="Nội dung (vi)" defaultValue={initial.contentHtml} height={460} />
           <ImageField label="Ảnh đại diện" value={thumbnail} onChange={setThumbnail} />
         </div>
       </AdminCard>

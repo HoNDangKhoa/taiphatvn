@@ -79,6 +79,8 @@ model Product {
   category    Category? @relation(fields: [categoryId], references: [id])
   featured    Boolean   @default(false)
   visible     Boolean   @default(true)
+  isNew       Boolean   @default(false)
+  views       Int       @default(0)
   sortOrder   Int       @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -93,6 +95,8 @@ model Post {
   thumbnail       String?
   type            String    @default("NEWS")
   status          String    @default("PUBLISHED")
+  isNew           Boolean   @default(false)
+  views           Int       @default(0)
   metaTitle       String?
   metaDescription String?
   seoKeywords     String?
@@ -114,6 +118,20 @@ model Order {
   items     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model VisitLog {
+  id        String   @id @default(cuid())
+  path      String   @default("/")
+  ip        String?
+  browser   String   @default("Khác")
+  device    String   @default("desktop")
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([browser])
+  @@index([device])
+  @@index([ip])
 }
 
 model ContactInquiry {

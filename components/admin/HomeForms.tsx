@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
 import { ArrowDown, ArrowUp, Plus, Trash2 } from "lucide-react";
 import { AdminCard, AdminPageHeader, FormActionBar } from "@/components/admin/AdminChrome";
+import { ImageField } from "@/components/admin/ImageField";
 import { Input, Label, Select, Textarea } from "@/components/ui/input";
 import { saveHomeSection } from "@/lib/actions";
 import {
@@ -82,38 +83,6 @@ function Field({ label, value, onChange, multiline, rows = 3, hint }: { label: s
       <Label>{label}</Label>
       {multiline ? <Textarea rows={rows} value={value} onChange={(e) => onChange(e.target.value)} /> : <Input value={value} onChange={(e) => onChange(e.target.value)} />}
       {hint && <p className="mt-1 text-xs text-ink/45">{hint}</p>}
-    </div>
-  );
-}
-
-export function ImageField({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
-  const [uploading, setUploading] = useState(false);
-  return (
-    <div>
-      <Label>{label}</Label>
-      <div className="flex flex-wrap items-center gap-3">
-        {value && <img src={value} alt="" className="h-16 w-16 rounded-lg object-cover" />}
-        <Input value={value} onChange={(e) => onChange(e.target.value)} placeholder="/media/hoac-https://..." />
-        <label className="cursor-pointer rounded-lg border border-black/10 bg-white px-3 py-2 text-sm font-semibold">
-          {uploading ? "Đang tải…" : "Tải ảnh"}
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={async (e) => {
-              const file = e.target.files?.[0];
-              if (!file) return;
-              setUploading(true);
-              const body = new FormData();
-              body.set("file", file);
-              const res = await fetch("/api/upload", { method: "POST", body });
-              const data = await res.json();
-              setUploading(false);
-              if (data.url) onChange(data.url);
-            }}
-          />
-        </label>
-      </div>
     </div>
   );
 }

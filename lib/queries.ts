@@ -19,6 +19,8 @@ export type ProductView = {
   categoryName: string;
   featured: boolean;
   visible: boolean;
+  isNew: boolean;
+  views: number;
   sortOrder: number;
   categoryId: string;
 };
@@ -37,6 +39,8 @@ function mapProduct(row: {
   variants: string | null;
   featured: boolean;
   visible: boolean;
+  isNew: boolean;
+  views: number;
   sortOrder: number;
   categoryId: string | null;
   category?: { name: string } | null;
@@ -56,6 +60,8 @@ function mapProduct(row: {
     categoryName: row.category?.name || "",
     featured: row.featured,
     visible: row.visible,
+    isNew: row.isNew,
+    views: row.views,
     sortOrder: row.sortOrder,
     categoryId: row.categoryId || "",
   };

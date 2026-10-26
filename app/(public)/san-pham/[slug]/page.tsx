@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { after } from "next/server";
 import { BuyBox } from "@/components/site/BuyBox";
 import { PageHero } from "@/components/site/PageHero";
+import { prisma } from "@/lib/prisma";
 import { getProduct, getProducts } from "@/lib/queries";
 import { formatPrice } from "@/lib/utils";
 
@@ -9,6 +11,7 @@ export default async function ProductDetail({ params }: { params: Promise<{ slug
   const { slug } = await params;
   const product = await getProduct(slug);
   if (!product || !product.visible) notFound();
+  after(() => prisma.product.update({ where: { id: product.id }, data: { views: { increment: 1 } } }));
   const related = (await getProducts({ visibleOnly: true })).filter((p) => p.id !== product.id).slice(0, 3);
   return (
     <div className="bg-[#FBF4EC] pb-16">
