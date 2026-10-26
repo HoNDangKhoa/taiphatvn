@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
 import { ArrowDown, ArrowUp, Plus, Trash2 } from "lucide-react";
-import { AdminCard, AdminPageHeader } from "@/components/admin/AdminChrome";
+import { AdminCard, AdminPageHeader, FormActionBar } from "@/components/admin/AdminChrome";
 import { Input, Label, Select, Textarea } from "@/components/ui/input";
 import { saveHomeSection } from "@/lib/actions";
 import {
@@ -17,17 +17,15 @@ import {
   type BannerData,
   type HomeSectionKey,
 } from "@/lib/home";
-import { cn } from "@/lib/utils";
-
 function SaveBar({ pending, message, onReset }: { pending: boolean; message: string; onReset: () => void }) {
+  const router = useRouter();
   return (
-    <div className="sticky top-14 z-30 -mx-4 mb-4 flex flex-wrap items-center gap-2 border-b border-black/5 bg-[#f3f4f6]/95 px-4 py-3 backdrop-blur md:-mx-6 md:px-6">
-      <button type="submit" disabled={pending} className="rounded-xl bg-[#3f7d3a] px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60">
-        {pending ? "Đang lưu…" : "Lưu thay đổi"}
-      </button>
-      <button type="button" onClick={onReset} className="rounded-xl border border-black/10 bg-white px-4 py-2.5 text-sm font-semibold">Làm lại</button>
-      {message && <span className={cn("text-sm font-semibold", message.startsWith("Lỗi") ? "text-red-600" : "text-emerald-600")}>{message}</span>}
-    </div>
+    <FormActionBar
+      saving={pending}
+      message={message}
+      onReset={onReset}
+      onExit={() => router.push("/admin")}
+    />
   );
 }
 

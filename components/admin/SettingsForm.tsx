@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { AdminCard } from "@/components/admin/AdminChrome";
+import { AdminCard, FormActionBar } from "@/components/admin/AdminChrome";
 import { Input, Label, Textarea } from "@/components/ui/input";
 import { saveSettings } from "@/lib/actions";
 
@@ -62,11 +62,7 @@ export function SettingsForm({ initial }: { initial: SettingsValues }) {
     >
       <input type="hidden" name="logoUrl" value={values.logoUrl} />
       <input type="hidden" name="faviconUrl" value={values.faviconUrl} />
-      <div className="flex flex-wrap gap-2">
-        <button disabled={pending} className="rounded-xl bg-[#3f7d3a] px-4 py-2.5 text-sm font-semibold text-white">{pending ? "Đang lưu…" : "Lưu"}</button>
-        <button type="button" className="rounded-xl border border-black/10 bg-white px-4 py-2.5 text-sm font-semibold" onClick={() => setValues(initial)}>Làm lại</button>
-        {message && <span className="self-center text-sm font-semibold text-emerald-600">{message}</span>}
-      </div>
+      <FormActionBar saving={pending} message={message} onReset={() => { setValues(initial); setMessage(""); }} onExit={() => router.push("/admin")} />
 
       <AdminCard title="Thông tin website">
         <div className="grid gap-4 md:grid-cols-2">

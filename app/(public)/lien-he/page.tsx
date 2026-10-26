@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { ContactForm } from "@/components/site/ContactForm";
 import { PageHero } from "@/components/site/PageHero";
-import { getSettings } from "@/lib/queries";
+import { getPageSeo, getSettings } from "@/lib/queries";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getPageSeo("contact");
+  return { title: seo.title || "Liên hệ", description: seo.description || undefined, keywords: seo.keywords || undefined };
+}
 
 export default async function ContactPage() {
   const settings = await getSettings();

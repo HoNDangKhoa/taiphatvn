@@ -1,5 +1,6 @@
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { parseBanner, type BannerData } from "@/lib/home";
+import { emptyPageSeo, parseBanner, SEO_PAGES, type BannerData, type PageSeo } from "@/lib/home";
 import { parseJson } from "@/lib/utils";
 
 export type Variant = { id: string; name: string; price: number; image?: string };
@@ -60,8 +61,26 @@ function mapProduct(row: {
   };
 }
 
+const loadSettings = unstable_cache(
+  () => prisma.siteSetting.findUnique({ where: { id: "site_config" } }),
+  ["site-settings"],
+  { tags: ["site"], revalidate: 120 },
+);
+
+const loadProducts = unstable_cache(
+  async () => {
+    const rows = await prisma.product.findMany({
+      include: { category: true },
+      orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
+    });
+    return rows.map(mapProduct);
+  },
+  ["catalog-products"],
+  { tags: ["catalog"], revalidate: 120 },
+);
+
 export async function getSettings() {
-  return prisma.siteSetting.findUnique({ where: { id: "site_config" } });
+  return loadSettings();
 }
 
 export async function getBanner(): Promise<BannerData> {
@@ -69,16 +88,19 @@ export async function getBanner(): Promise<BannerData> {
   return parseBanner(row?.bannerData);
 }
 
+export async function getPageSeo(key: string): Promise<PageSeo> {
+  const banner = await getBanner();
+  const path = SEO_PAGES.find((page) => page.key === key)?.path || "";
+  return { ...emptyPageSeo(path), ...banner.pageSeo?.[key] };
+}
+
 export async function getProducts(opts?: { visibleOnly?: boolean; featured?: boolean }) {
-  const rows = await prisma.product.findMany({
-    where: {
-      ...(opts?.visibleOnly ? { visible: true } : {}),
-      ...(opts?.featured ? { featured: true } : {}),
-    },
-    include: { category: true },
-    orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
+  const rows = await loadProducts();
+  return rows.filter((row) => {
+    if (opts?.visibleOnly && !row.visible) return false;
+    if (opts?.featured && !row.featured) return false;
+    return true;
   });
-  return rows.map(mapProduct);
 }
 
 export async function getProduct(slug: string) {

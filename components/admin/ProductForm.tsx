@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { AdminCard } from "@/components/admin/AdminChrome";
+import { useRouter } from "next/navigation";
+import { AdminCard, FormActionBar } from "@/components/admin/AdminChrome";
 import { ImageField } from "@/components/admin/HomeForms";
 import { Input, Label, Select, Textarea } from "@/components/ui/input";
 import { saveProduct } from "@/lib/actions";
@@ -28,6 +29,7 @@ type Initial = {
 };
 
 export function ProductForm({ initial, categories }: { initial: Initial; categories: Cat[] }) {
+  const router = useRouter();
   const [image, setImage] = useState(initial.image);
   const [variants, setVariants] = useState<Variant[]>(initial.variants);
   const [gallery, setGallery] = useState(initial.gallery.join("\n"));
@@ -37,9 +39,10 @@ export function ProductForm({ initial, categories }: { initial: Initial; categor
       <input type="hidden" name="image" value={image} />
       <input type="hidden" name="variants" value={JSON.stringify(variants)} />
       <input type="hidden" name="gallery" value={JSON.stringify(gallery.split("\n").map((s) => s.trim()).filter(Boolean))} />
-      <div className="flex gap-2">
-        <button className="rounded-xl bg-[#3f7d3a] px-4 py-2.5 text-sm font-semibold text-white">Lưu</button>
-      </div>
+      <FormActionBar
+        onReset={() => { setImage(initial.image); setVariants(initial.variants); setGallery(initial.gallery.join("\n")); }}
+        onExit={() => router.push("/admin/products")}
+      />
       <AdminCard title="Thông tin sản phẩm">
         <div className="grid gap-4 md:grid-cols-2">
           <div><Label>Tên</Label><Input name="name" defaultValue={initial.name} required /></div>

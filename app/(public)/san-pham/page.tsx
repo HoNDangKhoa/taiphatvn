@@ -1,7 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero } from "@/components/site/PageHero";
-import { getCategories, getProducts } from "@/lib/queries";
+import { getCategories, getPageSeo, getProducts } from "@/lib/queries";
 import { formatPrice } from "@/lib/utils";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getPageSeo("products");
+  return { title: seo.title || "Sản phẩm", description: seo.description || undefined, keywords: seo.keywords || undefined };
+}
 
 export default async function ProductsPage({ searchParams }: { searchParams: Promise<{ dm?: string }> }) {
   const { dm } = await searchParams;

@@ -11,6 +11,7 @@ import {
   ShoppingBag,
   UserRound,
 } from "lucide-react";
+import { SEO_PAGES } from "@/lib/home";
 
 export type AdminNavItem = {
   label: string;
@@ -28,7 +29,14 @@ export const adminNav: AdminNavItem[] = [
       { label: "Sản phẩm", href: "/admin/products" },
       { label: "Danh mục trà", href: "/admin/categories" },
       { label: "Tin tức", href: "/admin/posts" },
-      { label: "Giới thiệu", href: "/admin/about" },
+    ],
+  },
+  {
+    label: "Đơn hàng & liên hệ",
+    icon: "orders",
+    children: [
+      { label: "Đơn đặt trà", href: "/admin/orders" },
+      { label: "Đăng ký / Liên hệ", href: "/admin/contacts" },
     ],
   },
   {
@@ -50,20 +58,25 @@ export const adminNav: AdminNavItem[] = [
       { label: "Footer", href: "/admin/home/footer" },
     ],
   },
-  { label: "Đơn đặt trà", href: "/admin/orders", icon: "orders" },
-  { label: "Đăng ký / Liên hệ", href: "/admin/contacts", icon: "contacts" },
+  {
+    label: "Trang tĩnh",
+    icon: "pages",
+    children: [{ label: "Giới thiệu", href: "/admin/about" }],
+  },
   {
     label: "Quản lý hình ảnh",
     icon: "media",
     children: [
       { label: "Logo", href: "/admin/branding/logo" },
       { label: "Favicon", href: "/admin/branding/favicon" },
+      { label: "Mạng xã hội Footer", href: "/admin/branding/social" },
+      { label: "Thư viện media", href: "/admin/media" },
     ],
   },
   {
     label: "Quản lý SEO page",
     icon: "seo",
-    children: [{ label: "Trang chủ", href: "/admin/settings" }],
+    children: SEO_PAGES.map((page) => ({ label: page.label, href: `/admin/seo/${page.key}` })),
   },
   { label: "Thiết lập thông tin", href: "/admin/settings", icon: "settings" },
 ];

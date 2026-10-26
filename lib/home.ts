@@ -99,7 +99,44 @@ export type FooterContent = {
   links: NavLink[];
 };
 
+export type PageSeo = {
+  title: string;
+  keywords: string;
+  description: string;
+  focusKeyword: string;
+  ogImage: string;
+  indexable: boolean;
+  canonical: string;
+  ogSiteName: string;
+  ogType: string;
+  ogUrl: string;
+};
+
+export const SEO_PAGES = [
+  { key: "home", label: "Trang chủ", path: "/" },
+  { key: "products", label: "Sản phẩm", path: "/san-pham" },
+  { key: "news", label: "Tin tức", path: "/tin-tuc" },
+  { key: "about", label: "Giới thiệu", path: "/gioi-thieu" },
+  { key: "contact", label: "Liên hệ", path: "/lien-he" },
+] as const;
+
+export function emptyPageSeo(path = ""): PageSeo {
+  return {
+    title: "",
+    keywords: "",
+    description: "",
+    focusKeyword: "",
+    ogImage: "",
+    indexable: true,
+    canonical: path,
+    ogSiteName: "Kim Khánh",
+    ogType: "website",
+    ogUrl: path,
+  };
+}
+
 export type BannerData = {
+  pageSeo: Record<string, PageSeo>;
   header: HeaderContent;
   hero: HeroContent;
   story: StoryContent;
@@ -128,6 +165,7 @@ const FLAVOR =
 
 export function defaultBanner(): BannerData {
   return {
+    pageSeo: Object.fromEntries(SEO_PAGES.map((page) => [page.key, emptyPageSeo(page.path)])),
     header: {
       links: [
         { id: "n1", label: "Giới thiệu", href: "/gioi-thieu" },
@@ -298,7 +336,12 @@ export function parseBanner(raw?: string | null): BannerData {
   if (!raw) return base;
   try {
     const data = JSON.parse(raw) as Partial<BannerData>;
+    const pageSeo = { ...base.pageSeo };
+    for (const page of SEO_PAGES) {
+      pageSeo[page.key] = { ...emptyPageSeo(page.path), ...data.pageSeo?.[page.key] };
+    }
     return {
+      pageSeo,
       header: { ...base.header, ...data.header, links: data.header?.links?.length ? data.header.links : base.header.links },
       hero: { ...base.hero, ...data.hero, tags: data.hero?.tags?.length ? data.hero.tags : base.hero.tags, badges: data.hero?.badges?.length ? data.hero.badges : base.hero.badges },
       story: { ...base.story, ...data.story },

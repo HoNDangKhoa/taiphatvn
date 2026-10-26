@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
-import { ChevronDown, ChevronRight, ExternalLink, Menu, X } from "lucide-react";
+import { Bell, ChevronDown, ChevronRight, ExternalLink, Home, Menu, Phone, RefreshCw, X } from "lucide-react";
 import { adminIconMap, adminNav } from "@/lib/admin-nav";
 import { cn } from "@/lib/utils";
 
@@ -40,10 +40,11 @@ export function AdminShell({
       if (child) {
         list.push(item.label, child.label);
         if (pathname.endsWith("/new")) list.push("Thêm mới");
-        else if (pathname !== child.href && !pathname.endsWith("/new")) list.push("Chỉnh sửa");
+        else if (pathname !== child.href) list.push("Chỉnh sửa");
       } else if (item.href && isActive(pathname, item.href) && item.href !== "/admin") list.push(item.label);
     }
-    if (pathname.includes("/account")) list.push("Tài khoản");
+    if (pathname.includes("/account/password")) list.push("Đổi mật khẩu");
+    else if (pathname.includes("/account")) list.push("Tài khoản");
     return list;
   }, [pathname]);
 
@@ -64,7 +65,7 @@ export function AdminShell({
           if (!item.children) {
             const active = isActive(pathname, item.href);
             return (
-              <Link key={item.label} href={item.href || "/admin"} onClick={() => setMobileOpen(false)} className={cn("flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold", active ? "bg-gradient-to-r from-[#3f7d3a] to-[#6a9e4f] text-white" : "text-ink/70 hover:bg-black/5")}>
+              <Link key={item.label} href={item.href || "/admin"} onClick={() => setMobileOpen(false)} className={cn("flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold", active ? "bg-gradient-to-r from-[#3f7d3a] to-[#6a9e4f] text-white shadow-sm" : "text-ink/70 hover:bg-black/5")}>
                 <Icon size={18} /> {item.label}
               </Link>
             );
@@ -105,32 +106,58 @@ export function AdminShell({
         {mobileOpen && (
           <div className="fixed inset-0 z-50 flex lg:hidden">
             <div className="h-full bg-white shadow-xl">{Sidebar}</div>
-            <button className="flex-1 bg-black/40" aria-label="Đóng" onClick={() => setMobileOpen(false)} />
+            <button className="flex-1 bg-black/40" aria-label="Đóng menu" onClick={() => setMobileOpen(false)} />
           </div>
         )}
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-black/5 bg-white px-4 md:px-6">
-            <div className="flex items-center gap-3 text-sm font-semibold text-ink/60">
-              <button type="button" className="rounded-lg p-2 lg:hidden" onClick={() => setMobileOpen(true)} aria-label="Menu">
-                <Menu size={18} />
-              </button>
-              <span>Trang chủ</span>
-              {crumbs.map((c) => (
-                <span key={c} className="flex items-center gap-3">
-                  <span>/</span>
-                  <span className="text-ink">{c}</span>
-                </span>
-              ))}
-            </div>
             <div className="flex items-center gap-3">
-              <Link href="/admin/account" className="hidden text-sm font-semibold sm:inline">{userName}</Link>
-              <span className="grid h-9 w-9 place-items-center rounded-full bg-[#3f7d3a] text-sm font-semibold text-white">{userInitial}</span>
-              <form action={signOutAction}>
-                <button className="rounded-lg px-2 py-1 text-sm font-semibold text-ink/60 hover:bg-black/5">Thoát</button>
-              </form>
+              <button type="button" className="rounded-lg p-2 hover:bg-black/5 lg:hidden" onClick={() => setMobileOpen(true)} aria-label="Mở menu">
+                {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+              </button>
+              <p className="text-sm font-semibold text-ink/70">Xin chào, <span className="text-[#3f7d3a]">{userName}</span> !</p>
+            </div>
+            <div className="flex items-center gap-1 md:gap-2">
+              <button type="button" className="rounded-lg p-2 text-ink/60 hover:bg-black/5" onClick={() => window.location.reload()} aria-label="Tải lại">
+                <RefreshCw size={18} />
+              </button>
+              <Link href="/admin/contacts" className="relative rounded-lg p-2 text-ink/60 hover:bg-black/5" aria-label="Liên hệ">
+                <Bell size={18} />
+              </Link>
+              <Link href="/admin/settings" className="rounded-lg p-2 text-ink/60 hover:bg-black/5" aria-label="Thiết lập" title="Thiết lập thông tin">
+                <Phone size={18} />
+              </Link>
+              <details className="relative ml-1">
+                <summary className="flex cursor-pointer list-none items-center gap-2 rounded-full border border-[#3f7d3a]/40 px-2 py-1.5 md:px-3">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#3f7d3a] text-sm font-semibold text-white">{userInitial}</span>
+                  <span className="hidden text-left text-xs font-semibold leading-tight md:block">
+                    <span className="block text-ink/45">Nhà quản trị</span>
+                    <span className="text-ink">{userName}</span>
+                  </span>
+                </summary>
+                <div className="absolute right-0 z-50 mt-2 w-52 overflow-hidden rounded-xl border border-black/10 bg-white shadow-lg">
+                  <Link href="/admin/account" className="block px-4 py-2.5 text-sm font-semibold hover:bg-black/5">Thông tin admin</Link>
+                  <Link href="/admin/account/password" className="block px-4 py-2.5 text-sm font-semibold hover:bg-black/5">Đổi mật khẩu</Link>
+                  <form action={signOutAction}>
+                    <button type="submit" className="w-full px-4 py-2.5 text-left text-sm font-semibold text-red-600 hover:bg-red-50">Đăng xuất</button>
+                  </form>
+                </div>
+              </details>
             </div>
           </header>
+          <div className="border-b border-black/5 bg-white/70 px-4 py-2 md:px-6">
+            <p className="flex flex-wrap items-center gap-1.5 text-xs font-semibold text-ink/45">
+              <Home size={13} className="text-[#3f7d3a]" />
+              <Link href="/admin" className="hover:text-[#3f7d3a]">Bảng điều khiển</Link>
+              {crumbs.map((c) => (
+                <span key={c} className="flex items-center gap-1.5"><span>›</span><span>{c}</span></span>
+              ))}
+            </p>
+          </div>
           <main className="flex-1 p-4 md:p-6">{children}</main>
+          <footer className="border-t border-black/5 bg-white px-4 py-4 text-center text-xs font-semibold text-ink/40">
+            <p>Kim Khánh · Tài Phát CMS</p>
+          </footer>
         </div>
       </div>
     </div>

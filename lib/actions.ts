@@ -1,12 +1,12 @@
 "use server";
 
 import bcrypt from "bcryptjs";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import nodemailer from "nodemailer";
 import { prisma } from "@/lib/prisma";
 import { clearSession, readSession, writeSession } from "@/lib/session";
-import { parseBanner, type BannerData, type HomeSectionKey } from "@/lib/home";
+import { emptyPageSeo, parseBanner, SEO_PAGES, type BannerData, type HomeSectionKey, type PageSeo } from "@/lib/home";
 import { slugify } from "@/lib/utils";
 
 async function requireAdmin() {
@@ -16,6 +16,8 @@ async function requireAdmin() {
 }
 
 function refresh() {
+  revalidateTag("site");
+  revalidateTag("catalog");
   revalidatePath("/", "layout");
   revalidatePath("/admin", "layout");
 }
@@ -45,6 +47,35 @@ export async function saveHomeSection<K extends HomeSectionKey>(key: K, value: B
     where: { id: "site_config" },
     update: { bannerData: JSON.stringify(banner) },
     create: { id: "site_config", bannerData: JSON.stringify(banner) },
+  });
+  refresh();
+}
+
+export async function savePageSeo(key: string, value: PageSeo) {
+  await requireAdmin();
+  if (!SEO_PAGES.some((page) => page.key === key)) throw new Error("Trang SEO không hợp lệ.");
+  const row = await prisma.siteSetting.findUnique({ where: { id: "site_config" } });
+  const banner = parseBanner(row?.bannerData);
+  banner.pageSeo[key] = value;
+  const data: { bannerData: string; metaTitle?: string; metaDescription?: string; seoKeywords?: string; primaryKeyword?: string } = {
+    bannerData: JSON.stringify(banner),
+  };
+  if (key === "home") {
+    data.metaTitle = value.title;
+    data.metaDescription = value.description;
+    data.seoKeywords = value.keywords;
+    data.primaryKeyword = value.focusKeyword;
+  }
+  await prisma.siteSetting.update({ where: { id: "site_config" }, data });
+  refresh();
+}
+
+export async function saveSocial(formData: FormData) {
+  await requireAdmin();
+  const str = (k: string) => String(formData.get(k) || "");
+  await prisma.siteSetting.update({
+    where: { id: "site_config" },
+    data: { facebook: str("facebook"), instagram: str("instagram"), tiktok: str("tiktok"), messenger: str("messenger") },
   });
   refresh();
 }
@@ -149,12 +180,11 @@ export async function saveProduct(formData: FormData) {
   const id = String(formData.get("id") || "");
   const data = productData(formData);
   if (!data.name || !data.slug) throw new Error("Nhập tên sản phẩm.");
-  if (id) {
-    await prisma.product.update({ where: { id }, data });
-  } else {
-    await prisma.product.create({ data });
-  }
+  const row = id
+    ? await prisma.product.update({ where: { id }, data })
+    : await prisma.product.create({ data });
   refresh();
+  if (formData.get("stay") === "1") redirect(`/admin/products/${row.id}`);
   redirect("/admin/products");
 }
 
@@ -203,10 +233,11 @@ export async function savePost(formData: FormData) {
     seoKeywords: String(formData.get("seoKeywords") || ""),
     publishedAt: new Date(),
   };
-  if (id) await prisma.post.update({ where: { id }, data });
-  else await prisma.post.create({ data });
+  const row = id ? await prisma.post.update({ where: { id }, data }) : await prisma.post.create({ data });
   refresh();
-  redirect(type === "ABOUT" ? "/admin/about" : "/admin/posts");
+  const list = type === "ABOUT" ? "/admin/about" : "/admin/posts";
+  if (formData.get("stay") === "1") redirect(type === "ABOUT" ? "/admin/about" : `/admin/posts/${row.id}`);
+  redirect(list);
 }
 
 export async function deletePosts(ids: string[]) {

@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { PageHero } from "@/components/site/PageHero";
-import { getAbout } from "@/lib/queries";
+import { getAbout, getPageSeo } from "@/lib/queries";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getPageSeo("about");
+  return { title: seo.title || "Giới thiệu", description: seo.description || undefined, keywords: seo.keywords || undefined };
+}
 
 export default async function AboutPage() {
   const post = await getAbout();

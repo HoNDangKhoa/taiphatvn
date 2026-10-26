@@ -7,15 +7,15 @@ const body = Be_Vietnam_Pro({
   subsets: ["vietnamese", "latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-body",
+  display: "swap",
 });
 
 const display = Playfair_Display({
   subsets: ["vietnamese", "latin"],
   weight: ["600", "700"],
   variable: "--font-display",
+  display: "swap",
 });
-
-export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();

@@ -1,6 +1,7 @@
 "use client";
 
-import { AdminCard } from "@/components/admin/AdminChrome";
+import { useRouter } from "next/navigation";
+import { AdminCard, FormActionBar } from "@/components/admin/AdminChrome";
 import { ImageField } from "@/components/admin/HomeForms";
 import { Input, Label, Select, Textarea } from "@/components/ui/input";
 import { savePost } from "@/lib/actions";
@@ -24,13 +25,15 @@ export function PostForm({
     seoKeywords: string;
   };
 }) {
+  const router = useRouter();
   const [thumbnail, setThumbnail] = useState(initial.thumbnail);
+  const exitHref = type === "ABOUT" ? "/admin/about" : "/admin/posts";
   return (
     <form action={savePost} className="space-y-4">
       {initial.id && <input type="hidden" name="id" value={initial.id} />}
       <input type="hidden" name="type" value={type} />
       <input type="hidden" name="thumbnail" value={thumbnail} />
-      <button className="rounded-xl bg-[#3f7d3a] px-4 py-2.5 text-sm font-semibold text-white">Lưu</button>
+      <FormActionBar onReset={() => setThumbnail(initial.thumbnail)} onExit={() => router.push(exitHref)} />
       <AdminCard title={type === "ABOUT" ? "Bài giới thiệu" : "Bài viết"}>
         <div className="grid gap-4">
           <div><Label>Tiêu đề</Label><Input name="title" defaultValue={initial.title} required /></div>

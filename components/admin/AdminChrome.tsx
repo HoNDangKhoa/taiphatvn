@@ -31,6 +31,36 @@ export function AdminCard({ title, children, className }: { title?: string; chil
   );
 }
 
+export function FormActionBar({
+  saving,
+  message,
+  onReset,
+  onExit,
+}: {
+  saving?: boolean;
+  message?: string;
+  onReset?: () => void;
+  onExit?: () => void;
+}) {
+  return (
+    <div className="sticky top-14 z-30 -mx-4 mb-4 flex flex-wrap items-center gap-2 border-b border-black/5 bg-[#f3f4f6]/95 px-4 py-3 backdrop-blur md:-mx-6 md:px-6">
+      <button type="submit" name="stay" value="" disabled={saving} className="rounded-xl bg-[#3f7d3a] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#2f6230] disabled:opacity-60">
+        {saving ? "Đang lưu…" : "Lưu"}
+      </button>
+      <button type="submit" name="stay" value="1" disabled={saving} className="rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-600 disabled:opacity-60">
+        Lưu tại trang
+      </button>
+      <button type="button" onClick={onReset} className="rounded-xl border border-black/10 bg-white px-4 py-2.5 text-sm font-semibold text-ink hover:bg-black/5">
+        Làm lại
+      </button>
+      <button type="button" onClick={onExit} className="rounded-xl bg-red-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-600">
+        Thoát
+      </button>
+      {message && <span className={cn("text-sm font-semibold", message.startsWith("Lỗi") ? "text-red-600" : "text-emerald-600")}>{message}</span>}
+    </div>
+  );
+}
+
 export function ContentToolbar({
   createHref,
   createLabel = "Thêm mới",
@@ -55,7 +85,7 @@ export function ContentToolbar({
       )}
       {onDelete && (
         <button type="button" disabled={deleteDisabled} onClick={onDelete} className={cn("inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white", deleteDisabled ? "bg-[#f8b4b4]" : "bg-[#f87171]")}>
-          <Trash2 size={16} /> Xóa đã chọn
+          <Trash2 size={16} /> Xóa tất cả
         </button>
       )}
       {onSearch && (
