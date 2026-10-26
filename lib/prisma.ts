@@ -1,20 +1,10 @@
-import fs from "fs";
-import path from "path";
 import { PrismaClient } from "@prisma/client";
 
 function databaseUrl() {
-  if (!process.env.VERCEL) return process.env.DATABASE_URL;
-
-  const dest = "/tmp/taiphat.db";
-  if (!fs.existsSync(dest)) {
-    const candidates = [
-      path.join(process.cwd(), "prisma", "dev.db"),
-      path.join(process.cwd(), "dev.db"),
-    ];
-    const src = candidates.find((file) => fs.existsSync(file));
-    if (src) fs.copyFileSync(src, dest);
-  }
-  return "file:/tmp/taiphat.db";
+  const url = process.env.DATABASE_URL;
+  if (!url || !url.includes("-pooler.") || url.includes("pgbouncer=")) return url;
+  const join = url.includes("?") ? "&" : "?";
+  return `${url}${join}pgbouncer=true&connection_limit=1`;
 }
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };

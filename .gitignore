@@ -3,7 +3,11 @@ node_modules
 .next
 .vercel
 public/uploads
+prisma/dev.db
 prisma/dev.db-journal
 .env
+.env.local
+.env*.local
 *.log
 tsconfig.tsbuildinfo
+.env*
