@@ -1,0 +1,128 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("ADMIN")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model SiteSetting {
+  id              String   @id @default("site_config")
+  companyName     String   @default("CÔNG TY TNHH THƯƠNG MẠI TÀI PHÁT VN")
+  slogan          String   @default("Tinh hoa trà Việt")
+  hotline         String   @default("0988 538 616")
+  phone           String   @default("0988 538 616")
+  zalo            String   @default("0988538616")
+  email           String   @default("taiphattea@gmail.com")
+  address         String   @default("Tổ 9 ấp 5 xã Tà Lài, tỉnh Đồng Nai, Vietnam")
+  taxCode         String   @default("082829937902")
+  website         String   @default("https://www.taiphat.vn")
+  mapsEmbedUrl    String?
+  facebook        String   @default("")
+  instagram       String   @default("")
+  tiktok          String   @default("")
+  messenger       String   @default("")
+  copyright       String   @default("Copyright © 2026 CÔNG TY TNHH THƯƠNG MẠI TÀI PHÁT VN. Design by Vinasoftware (VNS).")
+  metaTitle       String?
+  metaDescription String?
+  seoKeywords     String?
+  primaryKeyword  String?
+  headJs          String?
+  bodyJs          String?
+  googleAnalytics String?
+  mailerHost      String?
+  mailerPort      String?
+  mailerSecure    String?
+  mailerEmail     String?
+  mailerPassword  String?
+  logoUrl         String   @default("/media/logo.png")
+  faviconUrl      String   @default("/media/logo.png")
+  bannerData      String?
+  updatedAt       DateTime @updatedAt
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique
+  sortOrder Int       @default(0)
+  products  Product[]
+  createdAt DateTime  @default(now())
+}
+
+model Product {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  label       String    @default("Premium Tea")
+  summary     String?
+  description String?
+  specs       String?
+  price       Int       @default(0)
+  image       String?
+  gallery     String?
+  variants    String?
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  featured    Boolean   @default(false)
+  visible     Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Post {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  summary         String?
+  contentHtml     String
+  thumbnail       String?
+  type            String    @default("NEWS")
+  status          String    @default("PUBLISHED")
+  metaTitle       String?
+  metaDescription String?
+  seoKeywords     String?
+  publishedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Order {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  fullName  String
+  phone     String
+  email     String?
+  address   String
+  note      String?
+  status    String   @default("NEW")
+  total     Int      @default(0)
+  items     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ContactInquiry {
+  id        String   @id @default(cuid())
+  fullName  String
+  phone     String
+  email     String?
+  message   String
+  status    String   @default("NEW")
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

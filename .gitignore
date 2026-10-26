@@ -1,0 +1,9 @@
+node_modules
+.DS_Store
+.next
+.vercel
+public/uploads
+prisma/dev.db-journal
+.env
+*.log
+tsconfig.tsbuildinfo

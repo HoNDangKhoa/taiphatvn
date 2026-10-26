@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #1c1917;
+  --wine: #8b1e1f;
+  --cream: #fbf4ec;
+  --line: rgba(28, 25, 23, 0.1);
+  --background: #f3f4f6;
+  --foreground: var(--ink);
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-wine: var(--wine);
+  --color-cream: var(--cream);
+  --color-paper: #ffffff;
+  --color-brass: #3f7d3a;
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-display);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+::selection { background: #e7c3c3; color: #3a1516; }
+
+.font-display { font-family: var(--font-display), Georgia, serif; }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track { animation: marquee 28s linear infinite; }
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0) rotate(-8deg); }
+  50% { transform: translateY(-16px) rotate(6deg); }
+}
+.leaf { animation: floaty 7s ease-in-out infinite; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.rise { animation: rise 0.8s ease both; }
+
+.rich p { margin: 0 0 0.9rem; line-height: 1.75; }
+.rich h2 { font-family: var(--font-display), Georgia, serif; color: #8b1e1f; font-size: 1.6rem; margin: 1.4rem 0 0.6rem; }
+.rich ul { padding-left: 1.2rem; }
