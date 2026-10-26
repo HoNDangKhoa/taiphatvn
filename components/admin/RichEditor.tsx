@@ -29,6 +29,7 @@ export function RichEditor({
           init={{
             height,
             menubar: false,
+            toolbar_mode: "wrap",
             branding: false,
             promotion: false,
             statusbar: true,
