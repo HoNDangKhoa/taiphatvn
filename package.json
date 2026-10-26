@@ -4,12 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
-    "build": "prisma generate && next build",
+    "build": "node scripts/copy-tinymce.js && prisma generate && next build",
     "start": "next start",
     "db:push": "prisma db push",
     "db:seed": "npx tsx prisma/seed.ts",
     "setup": "prisma db push && npx tsx prisma/seed.ts",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate && node scripts/copy-tinymce.js"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
@@ -25,7 +25,8 @@
     "nodemailer": "^7.0.13",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "tinymce": "^8.9.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

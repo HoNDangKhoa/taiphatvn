@@ -3,6 +3,7 @@ node_modules
 .next
 .vercel
 public/uploads
+public/tinymce/
 prisma/dev.db
 prisma/dev.db-journal
 .env

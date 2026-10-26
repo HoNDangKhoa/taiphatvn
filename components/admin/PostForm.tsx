@@ -54,8 +54,8 @@ export function PostForm({
             </div>
           )}
           {type === "ABOUT" && <input type="hidden" name="status" value="PUBLISHED" />}
-          <RichEditor name="summary" label="Mô tả (vi)" defaultValue={initial.summary} height={220} />
-          <RichEditor name="contentHtml" label="Nội dung (vi)" defaultValue={initial.contentHtml} height={460} />
+          <RichEditor name="summary" label="Mô tả (vi):" defaultValue={initial.summary} height={260} />
+          <RichEditor name="contentHtml" label="Nội dung (vi):" defaultValue={initial.contentHtml} />
           <ImageField label="Ảnh đại diện" value={thumbnail} onChange={setThumbnail} />
         </div>
       </AdminCard>

@@ -63,8 +63,8 @@ export function ProductForm({ initial, categories }: { initial: Initial; categor
             </Select>
           </div>
           <div><Label>Thứ tự</Label><Input name="sortOrder" type="number" defaultValue={initial.sortOrder} /></div>
-          <div className="md:col-span-2"><RichEditor name="summary" label="Mô tả (vi)" defaultValue={initial.summary} height={220} /></div>
-          <div className="md:col-span-2"><RichEditor name="description" label="Nội dung (vi)" defaultValue={initial.description} height={420} /></div>
+          <div className="md:col-span-2"><RichEditor name="summary" label="Mô tả (vi):" defaultValue={initial.summary} height={260} /></div>
+          <div className="md:col-span-2"><RichEditor name="description" label="Nội dung (vi):" defaultValue={initial.description} /></div>
           <div className="md:col-span-2"><Label>Thông số</Label><Textarea name="specs" defaultValue={initial.specs} /></div>
           <label className="flex items-center gap-2 text-sm font-semibold"><input type="checkbox" name="featured" defaultChecked={initial.featured} /> Nổi bật trang chủ</label>
           <label className="flex items-center gap-2 text-sm font-semibold"><input type="checkbox" name="visible" defaultChecked={initial.visible} /> Hiển thị</label>
