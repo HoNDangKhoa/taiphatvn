@@ -4,7 +4,7 @@ function databaseUrl() {
   const url = process.env.DATABASE_URL;
   if (!url || !url.includes("-pooler.") || url.includes("pgbouncer=")) return url;
   const join = url.includes("?") ? "&" : "?";
-  return `${url}${join}pgbouncer=true&connection_limit=1`;
+  return `${url}${join}pgbouncer=true&connection_limit=10&pool_timeout=20`;
 }
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
