@@ -133,9 +133,14 @@ function Story({ banner }: { banner: BannerData }) {
 function Products({ banner, products }: { banner: BannerData; products: ProductView[] }) {
   const [index, setIndex] = useState(0);
   const per = 3;
-  const max = Math.max(0, products.length - per);
-  const visible = products.slice(index, index + per);
-  const mobile = products[index] || products[0];
+  const len = products.length;
+  const visible =
+    len <= per
+      ? products
+      : Array.from({ length: per }, (_, k) => products[(index + k) % len]);
+  const mobile = products[index % Math.max(len, 1)] || products[0];
+  const navBtn =
+    "grid h-10 w-10 place-items-center rounded-full border border-[#8B1E1F] bg-white text-[#8B1E1F] transition active:bg-[#8B1E1F] active:text-white";
   return (
     <section id="san-pham" className="mx-auto max-w-[1200px] px-5 py-16 md:px-8">
       <div className="grid items-end gap-6 md:grid-cols-[1fr_1fr]">
@@ -149,16 +154,16 @@ function Products({ banner, products }: { banner: BannerData; products: ProductV
       </div>
       <div className="mt-12 hidden gap-6 md:grid md:grid-cols-3">
         {(visible.length ? visible : products).map((p) => (
-          <ProductTile key={p.id} product={p} />
+          <ProductTile key={`${p.id}-${index}`} product={p} />
         ))}
       </div>
       <div className="mt-10 md:hidden">{mobile && <ProductTile product={mobile} />}</div>
-      {products.length > 1 && (
+      {len > 1 && (
         <div className="mt-8 flex justify-center gap-3">
-          <button type="button" aria-label="Trước" onClick={() => setIndex((i) => Math.max(0, i - 1))} className="grid h-10 w-10 place-items-center rounded-full border border-[#8B1E1F] text-[#8B1E1F]">
+          <button type="button" aria-label="Trước" onClick={() => setIndex((i) => (i + len - 1) % len)} className={navBtn}>
             <ArrowLeft size={16} />
           </button>
-          <button type="button" aria-label="Sau" onClick={() => setIndex((i) => (i >= max ? 0 : i + 1))} className="grid h-10 w-10 place-items-center rounded-full bg-[#8B1E1F] text-white">
+          <button type="button" aria-label="Sau" onClick={() => setIndex((i) => (i + 1) % len)} className={navBtn}>
             <ArrowRight size={16} />
           </button>
         </div>
