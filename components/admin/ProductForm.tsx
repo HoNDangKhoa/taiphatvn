@@ -74,7 +74,28 @@ export function ProductForm({ initial, categories }: { initial: Initial; categor
         <ImageField label="Ảnh đại diện" value={image} onChange={setImage} />
         <div className="mt-3">
           <Label>Gallery (mỗi dòng một đường dẫn)</Label>
-          <Textarea value={gallery} onChange={(e) => setGallery(e.target.value)} rows={4} />
+          <Textarea value={gallery} onChange={(e) => setGallery(e.target.value)} rows={4} placeholder="/media/... hoặc https://...blob.../uploads/..." />
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <label className="cursor-pointer rounded-lg border border-black/10 bg-white px-3 py-2 text-sm font-semibold">
+              Tải ảnh vào gallery
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  e.target.value = "";
+                  if (!file) return;
+                  const body = new FormData();
+                  body.set("file", file);
+                  const res = await fetch("/api/upload", { method: "POST", body });
+                  const data = (await res.json()) as { url?: string };
+                  if (data.url) setGallery((prev) => (prev.trim() ? `${prev.trim()}\n${data.url}` : data.url!));
+                }}
+              />
+            </label>
+            <a href="/admin/media" className="text-sm font-semibold text-[#3f7d3a] hover:underline">Mở thư viện media để copy đường dẫn</a>
+          </div>
         </div>
       </AdminCard>
       <AdminCard title="Biến thể khối lượng">
