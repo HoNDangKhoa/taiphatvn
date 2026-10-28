@@ -177,7 +177,7 @@ function ProductTile({ product }: { product: ProductView }) {
     <Link href={`/san-pham/${product.slug}`} className="group block text-center">
       <p className="text-sm font-semibold tracking-[0.18em] text-[#2a211e] uppercase">{product.label}</p>
       <div className="mt-4 px-3 transition duration-300 group-hover:-translate-y-1">
-        <img src={product.image} alt={product.name} className="mx-auto h-80 w-full object-contain" />
+        <img src={product.image} alt={product.name} className="mx-auto h-80 w-full object-contain" loading="lazy" decoding="async" />
       </div>
       <p className="mt-4 text-sm font-semibold tracking-wide text-[#8B1E1F]">{formatPrice(product.price)}</p>
     </Link>

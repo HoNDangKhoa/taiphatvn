@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useFormStatus } from "react-dom";
 import { Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -42,22 +45,38 @@ export function FormActionBar({
   onReset?: () => void;
   onExit?: () => void;
 }) {
+  const { pending } = useFormStatus();
+  const busy = Boolean(saving || pending);
   return (
-    <div className="sticky top-14 z-30 -mx-4 mb-4 flex flex-wrap items-center gap-2 border-b border-black/5 bg-[#f3f4f6]/95 px-4 py-3 backdrop-blur md:-mx-6 md:px-6">
-      <button type="submit" name="stay" value="" disabled={saving} className="rounded-xl bg-[#3f7d3a] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#2f6230] disabled:opacity-60">
-        {saving ? "Đang lưu…" : "Lưu"}
-      </button>
-      <button type="submit" name="stay" value="1" disabled={saving} className="rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-600 disabled:opacity-60">
-        Lưu tại trang
-      </button>
-      <button type="button" onClick={onReset} className="rounded-xl border border-black/10 bg-white px-4 py-2.5 text-sm font-semibold text-ink hover:bg-black/5">
-        Làm lại
-      </button>
-      <button type="button" onClick={onExit} className="rounded-xl bg-red-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-600">
-        Thoát
-      </button>
-      {message && <span className={cn("text-sm font-semibold", message.startsWith("Lỗi") ? "text-red-600" : "text-emerald-600")}>{message}</span>}
-    </div>
+    <>
+      {busy && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/25 px-4 backdrop-blur-[1px]" role="status" aria-live="polite">
+          <div className="flex min-w-[220px] items-center gap-3 rounded-2xl bg-white px-5 py-4 shadow-xl">
+            <span className="h-5 w-5 animate-spin rounded-full border-2 border-[#3f7d3a] border-t-transparent" />
+            <div>
+              <p className="text-sm font-semibold text-ink">Đang lưu…</p>
+              <p className="text-xs text-ink/50">Vui lòng chờ trong giây lát</p>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="sticky top-14 z-30 -mx-4 mb-4 flex flex-wrap items-center gap-2 border-b border-black/5 bg-[#f3f4f6]/95 px-4 py-3 backdrop-blur md:-mx-6 md:px-6">
+        <button type="submit" name="stay" value="" disabled={busy} className="rounded-xl bg-[#3f7d3a] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#2f6230] disabled:opacity-60">
+          {busy ? "Đang lưu…" : "Lưu"}
+        </button>
+        <button type="submit" name="stay" value="1" disabled={busy} className="rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-600 disabled:opacity-60">
+          {busy ? "Đang lưu…" : "Lưu tại trang"}
+        </button>
+        <button type="button" disabled={busy} onClick={onReset} className="rounded-xl border border-black/10 bg-white px-4 py-2.5 text-sm font-semibold text-ink hover:bg-black/5 disabled:opacity-60">
+          Làm lại
+        </button>
+        <button type="button" disabled={busy} onClick={onExit} className="rounded-xl bg-red-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-600 disabled:opacity-60">
+          Thoát
+        </button>
+        {message && <span className={cn("text-sm font-semibold", message.startsWith("Lỗi") ? "text-red-600" : "text-emerald-600")}>{message}</span>}
+        {busy && !message && <span className="text-sm font-semibold text-[#3f7d3a]">Đang xử lý…</span>}
+      </div>
+    </>
   );
 }
 

@@ -18,8 +18,13 @@ async function requireAdmin() {
 function refresh() {
   revalidateTag("site");
   revalidateTag("catalog");
-  revalidatePath("/", "layout");
-  revalidatePath("/admin", "layout");
+  revalidatePath("/");
+  revalidatePath("/san-pham");
+  revalidatePath("/tin-tuc");
+  revalidatePath("/gioi-thieu");
+  revalidatePath("/lien-he");
+  revalidatePath("/gio-hang");
+  revalidatePath("/admin");
 }
 
 export async function login(formData: FormData) {

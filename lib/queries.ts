@@ -114,15 +114,28 @@ export async function getProduct(slug: string) {
   return row ? mapProduct(row) : null;
 }
 
+const loadCategories = unstable_cache(
+  () => prisma.category.findMany({ orderBy: { sortOrder: "asc" } }),
+  ["catalog-categories"],
+  { tags: ["catalog"], revalidate: 120 },
+);
+
 export async function getCategories() {
-  return prisma.category.findMany({ orderBy: { sortOrder: "asc" } });
+  return loadCategories();
 }
 
+const loadPublishedPosts = unstable_cache(
+  (type: string) =>
+    prisma.post.findMany({
+      where: { type, status: "PUBLISHED" },
+      orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
+    }),
+  ["catalog-posts"],
+  { tags: ["catalog"], revalidate: 120 },
+);
+
 export async function getPosts(type = "NEWS") {
-  return prisma.post.findMany({
-    where: { type, status: "PUBLISHED" },
-    orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
-  });
+  return loadPublishedPosts(type);
 }
 
 export async function getPost(slug: string) {
