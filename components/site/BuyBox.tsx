@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ShoppingBag, X } from "lucide-react";
 import type { ProductView } from "@/lib/queries";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, stripHtml } from "@/lib/utils";
 import { useCart } from "@/components/cart/CartProvider";
 
 export function BuyBox({ product }: { product: ProductView }) {
@@ -39,13 +39,19 @@ export function BuyBox({ product }: { product: ProductView }) {
   return (
     <div className="grid gap-10 lg:grid-cols-2">
       <div>
-        <div className="rounded-[28px] bg-[#F7F1EA] p-4 sm:p-6">
-          <img src={photo || image} alt={product.name} className="mx-auto max-h-[640px] w-full object-contain" />
+        <div className="overflow-hidden rounded-[28px] bg-[#F7F1EA] p-4 sm:p-6">
+          <img
+            src={photo || image}
+            alt={product.name}
+            className="mx-auto max-h-[640px] w-full rounded-2xl object-contain"
+            fetchPriority="high"
+            decoding="async"
+          />
         </div>
         <div className="mt-3 flex gap-2">
           {photos.slice(0, 5).map((src) => (
-            <button key={src} type="button" onClick={() => setPhoto(src)} className={`h-20 w-16 rounded-xl border bg-[#F7F1EA] p-1 ${photo === src ? "border-[#8B1E1F]" : "border-transparent"}`}>
-              <img src={src} alt="" className="h-full w-full object-contain" />
+            <button key={src} type="button" onClick={() => setPhoto(src)} className={`h-20 w-16 overflow-hidden rounded-xl border bg-[#F7F1EA] p-1 ${photo === src ? "border-[#8B1E1F]" : "border-transparent"}`}>
+              <img src={src} alt="" className="h-full w-full rounded-lg object-contain" loading="lazy" decoding="async" />
             </button>
           ))}
         </div>
@@ -54,7 +60,7 @@ export function BuyBox({ product }: { product: ProductView }) {
         <p className="text-xs font-semibold tracking-[0.2em] text-[#8A4B2A] uppercase">{product.label}</p>
         <h2 className="font-display mt-2 text-4xl text-[#8B1E1F]">{product.name}</h2>
         <p className="mt-3 text-2xl font-semibold text-[#8B1E1F]">{formatPrice(price)}</p>
-        <p className="mt-4 text-sm leading-7 text-[#6d564c]">{product.summary}</p>
+        <p className="mt-4 text-sm leading-7 text-[#6d564c]">{stripHtml(product.summary)}</p>
         {product.variants.length > 0 && (
           <div className="mt-6">
             <p className="text-sm font-semibold">Khối lượng / quy cách</p>

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowRight, Phone, ShoppingBag } from "lucide-react";
 import type { BannerData, GalleryImage } from "@/lib/home";
 import type { ProductView } from "@/lib/queries";
-import { formatPrice, telHref } from "@/lib/utils";
+import { formatPrice, stripHtml, telHref } from "@/lib/utils";
 
 type Brand = {
   companyName: string;
@@ -167,7 +167,7 @@ function CatalogRows({ banner, products }: { banner: BannerData; products: Produ
                     {product.name}
                   </Link>
                 </h3>
-                <p className="mt-4 text-sm leading-7 text-[#6d564c]">{note || product.summary}</p>
+                <p className="mt-4 text-sm leading-7 text-[#6d564c]">{stripHtml(note || product.summary)}</p>
                 <p className="mt-5 text-lg font-semibold tracking-wide text-[#8B1E1F]">
                   {formatPrice(product.price)}
                 </p>

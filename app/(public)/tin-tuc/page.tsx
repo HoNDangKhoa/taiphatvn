@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero } from "@/components/site/PageHero";
 import { getPageSeo, getPosts } from "@/lib/queries";
+import { stripHtml } from "@/lib/utils";
 
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getPageSeo("news");
@@ -19,7 +20,7 @@ export default async function NewsPage() {
             {post.thumbnail && <img src={post.thumbnail} alt="" className="mx-auto h-56 w-full bg-[#F7F1EA] object-contain p-2" />}
             <div className="p-4">
               <h2 className="font-display text-xl text-[#8B1E1F]">{post.title}</h2>
-              <p className="mt-2 text-sm leading-6 text-[#6d564c]">{post.summary}</p>
+              <p className="mt-2 text-sm leading-6 text-[#6d564c]">{stripHtml(post.summary || "")}</p>
             </div>
           </Link>
         ))}

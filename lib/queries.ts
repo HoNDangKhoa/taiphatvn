@@ -110,8 +110,8 @@ export async function getProducts(opts?: { visibleOnly?: boolean; featured?: boo
 }
 
 export async function getProduct(slug: string) {
-  const row = await prisma.product.findUnique({ where: { slug }, include: { category: true } });
-  return row ? mapProduct(row) : null;
+  const rows = await loadProducts();
+  return rows.find((row) => row.slug === slug) ?? null;
 }
 
 const loadCategories = unstable_cache(
