@@ -174,7 +174,7 @@ export function HeroEditor({ initial }: { initial: BannerData["hero"] }) {
 
 export function StoryEditor({ initial }: { initial: BannerData["story"] }) {
   return (
-    <SectionForm sectionKey="story" title="Câu chuyện Kim Khánh" initial={initial}>
+    <SectionForm sectionKey="story" title="Giới thiệu sản phẩm" initial={initial}>
       {(v, set) => (
         <AdminCard title="Khối nền đỏ">
           <div className="grid gap-4">
@@ -279,7 +279,7 @@ export function IdentityEditor({ initial }: { initial: BannerData["identity"] })
 
 export function ExclusiveEditor({ initial }: { initial: BannerData["exclusive"] }) {
   return (
-    <SectionForm sectionKey="exclusive" title="Độc quyền tại Kim Khánh" initial={initial}>
+    <SectionForm sectionKey="exclusive" title="Combo Hồng Trà & Trà Lài" initial={initial}>
       {(v, set) => (
         <AdminCard title="Khối chữ và ảnh oval">
           <div className="grid gap-4">

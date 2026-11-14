@@ -157,11 +157,14 @@ export type HomeSectionKey = keyof BannerData;
 const STORY =
   "Được vun trồng tại rẻo cao Tây Bắc mây phủ ngút ngàn và sao chế thủ công bởi nghệ nhân lão thành 35 năm, Kim Khánh Trà gìn giữ trọn vẹn vị chát êm dịu, hậu ngọt thanh đượm đà và hương cốm nồng nàn.";
 
+const INTRO =
+  "Sản phẩm trà Tài Phát Kim Khánh được chiết lọc từ 100% lá trà chọn lọc từ đồi chè cao. Hương vị tự nhiên, nguyên liệu chuyên dụng để pha chế Trà Sữa, Trà Trái cây và các thức uống hiện đại.";
+
 const PURE =
-  "100% NGUYÊN CHẤT & CHỌN LỌC: SẢN PHẨM ĐƯỢC LÀM TỪ 100% LÁ TRÀ ĐEN CHỌN LỌC, ĐÚC KẾT TINH TÚY TỪ ĐỒI CAO. HƯƠNG VỊ ĐẬM ĐÀ: TRÀ SỞ HỮU HƯƠNG THƠM TỰ NHIÊN QUYẾN RŨ, NƯỚC TRÀ ĐẬM ĐÀ, CHUẨN VỊ TRÀ TRUYỀN THỐNG.";
+  "100% nguyên chất & chọn lọc từ đồi cao. Hương thơm tự nhiên, nước trà đậm đà, chuẩn vị truyền thống.";
 
 const FLAVOR =
-  "HƯƠNG VỊ ĐẬM ĐÀ: TRÀ SỞ HỮU HƯƠNG THƠM TỰ NHIÊN QUYẾN RŨ, NƯỚC TRÀ ĐẬM ĐÀ, CHUẨN VỊ TRÀ TRUYỀN THỐNG.";
+  "Hương vị đậm đà, thơm tự nhiên quyến rũ, chuẩn vị trà truyền thống.";
 
 export function defaultBanner(): BannerData {
   return {
@@ -179,90 +182,90 @@ export function defaultBanner(): BannerData {
     },
     hero: {
       tags: [
-        { id: "t1", text: "Di sản trà Việt Nam", tone: "light" },
-        { id: "t2", text: "100% thuần khiết", tone: "solid" },
-        { id: "t3", text: "Thủ công gia truyền", tone: "outline" },
+        { id: "t1", text: "Công ty TNHH Tài Phát VN", tone: "light" },
+        { id: "t2", text: "100% lá trà chọn lọc", tone: "solid" },
+        { id: "t3", text: "Nguyên liệu trà sữa & trà trái cây", tone: "outline" },
       ],
-      title: "Tinh hoa trà Việt",
-      subtitle: "Hương vị nguyên bản Kim Khánh",
-      description: STORY,
+      title: "Kim Khánh",
+      subtitle: "Tài Phát VN",
+      description: INTRO,
       primaryLabel: "Đặt trà ngay",
       primaryHref: "/gio-hang",
       secondaryLabel: "0988 538 616",
-      image: "/media/hero-card.jpg",
+      image: "/media/hill-bg.jpg",
       badges: [
-        { id: "b1", text: "Búp chè hữu cơ" },
-        { id: "b2", text: "Specialty Tea" },
+        { id: "b1", text: "Hồng trà · Trà lài" },
+        { id: "b2", text: "Gói 500g" },
       ],
     },
     story: {
-      eyebrow: "Về cội nguồn • Tinh túy từ đồi cao",
-      title: "Câu chuyện Kim Khánh",
+      eyebrow: "Giới thiệu sản phẩm",
+      title: "Trà Tài Phát Kim Khánh",
       image: "/media/story-pack.jpg",
-      description: PURE,
+      description: INTRO,
       sealText: "TRÀ VIỆT • KIM KHÁNH • TINH HOA • ",
     },
     products: {
-      title: "Sản phẩm Kim Khánh",
-      description: STORY,
-      ctaLabel: "Xem tất cả",
+      title: "Sản phẩm chủ lực",
+      description: "Hồng trà đậm vị và Trà lài hương hoa — nguyên liệu chuyên dụng cho trà sữa, trà trái cây.",
+      ctaLabel: "Xem tất cả sản phẩm",
       ctaHref: "/san-pham",
     },
     gallery: {
-      title: "Tinh hoa trà Việt",
-      subtitle: "Hương vị nguyên bản Kim Khánh",
-      sealText: "TINH HOA TRÀ VIỆT • KIM KHÁNH • ",
+      title: "Trà trái cây từ Kim Khánh",
+      subtitle: "Gợi ý pha chế",
+      sealText: "TRÀ TRÁI CÂY • KIM KHÁNH • ",
       images: [
-        { id: "g1", src: "/media/gallery-green.jpg", alt: "Trà lài Tài Phát" },
-        { id: "g2", src: "/media/gallery-black.jpg", alt: "Hồng trà Tài Phát" },
+        { id: "g1", src: "/media/life-cups.jpg", alt: "Trà chanh · Trà tắc" },
+        { id: "g2", src: "/media/life-milktea.jpg", alt: "Trà sữa từ trà lài" },
+        { id: "g3", src: "/media/life-pour.jpg", alt: "Trà đào · Trà trái cây" },
       ],
     },
     flavor: {
-      leftTitle: FLAVOR,
+      leftTitle: "Hồng trà đậm vị",
       leftText: STORY,
-      leftNote: "Kim Khánh Trà gìn giữ trọn vẹn vị chát êm dịu, hậu ngọt thanh đượm đà và hương cốm nồng nàn.",
-      rightCard: FLAVOR,
+      leftNote: "Màu hổ phách, hậu ngọt — phù hợp trà sữa.",
+      rightCard: "Trà lài hương hoa nhẹ, hợp trà trái cây và trà hoa.",
     },
     marquee: { text: "TINH TUÝ TỪ ĐỒI CAO" },
     identity: {
-      title: "Bản sắc và phong vị Kim Khánh",
+      title: "Công thức gợi ý",
       description: PURE,
       images: [
-        { id: "i1", src: "/media/life-milktea.jpg", alt: "Trà sữa Kim Khánh" },
-        { id: "i2", src: "/media/life-pour.jpg", alt: "Pha trà" },
-        { id: "i3", src: "/media/life-cups.jpg", alt: "Ly trà trái cây" },
+        { id: "i1", src: "/media/life-milktea.jpg", alt: "Trà lựu đỏ" },
+        { id: "i2", src: "/media/life-cups.jpg", alt: "Trà ổi hồng" },
+        { id: "i3", src: "/media/life-pour.jpg", alt: "Trà chanh vỏ" },
       ],
     },
     exclusive: {
-      title: "Độc quyền tại Kim Khánh",
-      highlight: FLAVOR,
-      description: STORY,
-      ctaLabel: "Đặt ngay",
+      title: "Combo Hồng Trà & Trà Lài",
+      highlight: "2 gói / khoảng 1kg · 140.000 VNĐ",
+      description:
+        "Kết hợp hồng trà đậm vị và trà lài hương hoa tạo lớp hương đa tầng — vừa pha trà sữa, vừa pha trà trái cây.",
+      ctaLabel: "Đặt combo",
       ctaHref: "/gio-hang",
-      image: "/media/oval-pack.jpg",
+      image: "/media/hop-bon.jpg",
     },
     reviews: {
-      title: "Đánh giá khách hàng",
-      description: "Kim Khánh Trà gìn giữ trọn vẹn vị chát êm dịu, hậu ngọt thanh đượm đà và hương cốm nồng nàn.",
+      title: "Khách đánh giá",
+      description: "Phản hồi từ quán và khách pha chế mỗi ngày.",
       items: [
         {
           id: "r1",
-          name: "Lisa Nguyen",
-          content: STORY,
-          image: "/media/life-pour.jpg",
+          name: "Quán trà sữa Q.3",
+          content: "Hồng trà đậm vị, màu đẹp, hậu ngọt rõ — pha sữa rất ổn định.",
+          image: "/media/hong-tra.jpg",
         },
         {
           id: "r2",
           name: "Minh Anh",
-          content:
-            "Hồng trà đậm vị, nước trong và hậu ngọt rất rõ. Mình dùng mỗi sáng và vẫn thấy hương cốm rất riêng của Kim Khánh.",
-          image: "/media/life-milktea.jpg",
+          content: "Đóng gói chỉn chu, trà thơm tự nhiên, giao hàng nhanh.",
+          image: "/media/tra-lai.jpg",
         },
         {
           id: "r3",
           name: "Hoàng Long",
-          content:
-            "Đóng gói chỉn chu, trà thơm tự nhiên. Pha lạnh hay pha nóng đều giữ được vị truyền thống, không gắt.",
+          content: "Trà lài thơm nhẹ nhàng, bao bì đẹp, dùng pha trà trái cây rất hợp.",
           image: "/media/life-cups.jpg",
         },
       ],

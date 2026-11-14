@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { HomeView } from "@/components/site/HomeView";
-import { getBanner, getPageSeo, getProducts } from "@/lib/queries";
+import { getBanner, getPageSeo, getProducts, getSettings } from "@/lib/queries";
 
 export const revalidate = 120;
 
@@ -11,6 +11,20 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [banner, products] = await Promise.all([getBanner(), getProducts({ visibleOnly: true, featured: true })]);
-  return <HomeView banner={banner} products={products} />;
+  const [banner, products, settings] = await Promise.all([
+    getBanner(),
+    getProducts({ visibleOnly: true }),
+    getSettings(),
+  ]);
+
+  return (
+    <HomeView
+      banner={banner}
+      products={products}
+      brand={{
+        companyName: settings?.companyName || "CÔNG TY TNHH THƯƠNG MẠI TÀI PHÁT VN",
+        logoUrl: settings?.logoUrl || "/media/logo.png",
+      }}
+    />
+  );
 }
