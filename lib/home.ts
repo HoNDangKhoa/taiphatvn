@@ -39,7 +39,7 @@ export type ProductsSection = {
   ctaHref: string;
 };
 
-export type GalleryImage = { id: string; src: string; alt: string };
+export type GalleryImage = { id: string; src: string; alt: string; href?: string };
 export type GalleryContent = {
   title: string;
   subtitle: string;
@@ -212,13 +212,22 @@ export function defaultBanner(): BannerData {
       ctaHref: "/san-pham",
     },
     gallery: {
-      title: "Trà trái cây từ Kim Khánh",
-      subtitle: "Gợi ý pha chế",
-      sealText: "TRÀ TRÁI CÂY • KIM KHÁNH • ",
+      title: "Tinh hoa trà Việt",
+      subtitle: "Hương vị nguyên bản Kim Khánh",
+      sealText: "TINH HOA TRÀ VIỆT • KIM KHÁNH • ",
       images: [
-        { id: "g1", src: "/media/life-cups.jpg", alt: "Trà chanh · Trà tắc" },
-        { id: "g2", src: "/media/life-milktea.jpg", alt: "Trà sữa từ trà lài" },
-        { id: "g3", src: "/media/life-pour.jpg", alt: "Trà đào · Trà trái cây" },
+        {
+          id: "g1",
+          src: "/media/gallery-green.jpg",
+          alt: "Trà lài Tài Phát",
+          href: "/san-pham/tra-lai-tai-phat",
+        },
+        {
+          id: "g2",
+          src: "/media/gallery-black.jpg",
+          alt: "Hồng trà Tài Phát",
+          href: "/san-pham/hong-tra-tai-phat",
+        },
       ],
     },
     flavor: {
@@ -374,7 +383,7 @@ export function newBadge(): HeroBadge {
   return { id: uid("badge"), text: "Badge" };
 }
 export function newImage(): GalleryImage {
-  return { id: uid("img"), src: "", alt: "" };
+  return { id: uid("img"), src: "", alt: "", href: "" };
 }
 export function newReview(): ReviewItem {
   return { id: uid("rev"), name: "Khách hàng", content: "", image: "" };

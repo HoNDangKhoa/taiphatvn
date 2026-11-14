@@ -127,7 +127,7 @@ export function HeaderEditor({ initial }: { initial: BannerData["header"] }) {
 
 export function HeroEditor({ initial }: { initial: BannerData["hero"] }) {
   return (
-    <SectionForm sectionKey="hero" title="Hero / Banner" description="Tiêu đề, mô tả, ảnh sản phẩm và các thẻ tag." initial={initial}>
+    <SectionForm sectionKey="hero" title="Hero / Banner" description="Brand + tiêu đề trên nền đồi trà full-bleed. Ảnh hero riêng không dùng làm nền (nền cố định hill-bg)." initial={initial}>
       {(value, set) => (
         <>
           <AdminCard title="Nội dung">
@@ -174,15 +174,20 @@ export function HeroEditor({ initial }: { initial: BannerData["hero"] }) {
 
 export function StoryEditor({ initial }: { initial: BannerData["story"] }) {
   return (
-    <SectionForm sectionKey="story" title="Giới thiệu sản phẩm" initial={initial}>
+    <SectionForm
+      sectionKey="story"
+      title="Giới thiệu sản phẩm"
+      description="Khối chữ giữa hero và danh sách sản phẩm trên trang chủ (nền giấy trà)."
+      initial={initial}
+    >
       {(v, set) => (
-        <AdminCard title="Khối nền đỏ">
+        <AdminCard title="Nội dung giới thiệu">
           <div className="grid gap-4">
             <Field label="Eyebrow" value={v.eyebrow} onChange={(eyebrow) => set({ ...v, eyebrow })} />
             <Field label="Tiêu đề" value={v.title} onChange={(title) => set({ ...v, title })} />
-            <ImageField label="Hình sản phẩm giữa" value={v.image} onChange={(image) => set({ ...v, image })} />
             <Field label="Mô tả" value={v.description} onChange={(description) => set({ ...v, description })} multiline rows={5} />
-            <Field label="Chữ con dấu" value={v.sealText} onChange={(sealText) => set({ ...v, sealText })} hint="Chữ chạy vòng quanh mũi tên." />
+            <ImageField label="Ảnh phụ (không bắt buộc trên layout mới)" value={v.image} onChange={(image) => set({ ...v, image })} />
+            <Field label="Chữ con dấu (dự phòng)" value={v.sealText} onChange={(sealText) => set({ ...v, sealText })} />
           </div>
         </AdminCard>
       )}
@@ -192,7 +197,12 @@ export function StoryEditor({ initial }: { initial: BannerData["story"] }) {
 
 export function ProductsSectionEditor({ initial }: { initial: BannerData["products"] }) {
   return (
-    <SectionForm sectionKey="products" title="Sản phẩm nổi bật" description="Tiêu đề khối trang chủ. Sản phẩm, giá và biến thể sửa ở Quản lý sản phẩm." initial={initial}>
+    <SectionForm
+      sectionKey="products"
+      title="Sản phẩm chủ lực"
+      description="Tiêu đề khối xen kẽ Hồng trà / Trà lài. Ảnh, giá và slug lấy từ Quản lý sản phẩm — bấm ảnh trên trang chủ sẽ vào chi tiết."
+      initial={initial}
+    >
       {(v, set) => (
         <AdminCard title="Nội dung khối">
           <div className="grid gap-4">
@@ -209,17 +219,35 @@ export function ProductsSectionEditor({ initial }: { initial: BannerData["produc
 
 export function GalleryEditor({ initial }: { initial: BannerData["gallery"] }) {
   return (
-    <SectionForm sectionKey="gallery" title="Gallery tinh hoa" initial={initial}>
+    <SectionForm
+      sectionKey="gallery"
+      title="Gallery sản phẩm"
+      description="Ảnh bo góc trên trang chủ. Điền link sản phẩm (vd. /san-pham/tra-lai-tai-phat) để bấm vào mở trang chi tiết."
+      initial={initial}
+    >
       {(v, set) => (
-        <AdminCard title="Tiêu đề và 2 ảnh">
+        <AdminCard title="Tiêu đề và ảnh">
           <div className="grid gap-4">
-            <Field label="Dòng tiêu đề 1" value={v.title} onChange={(title) => set({ ...v, title })} />
-            <Field label="Dòng tiêu đề 2" value={v.subtitle} onChange={(subtitle) => set({ ...v, subtitle })} />
-            <Field label="Chữ con dấu" value={v.sealText} onChange={(sealText) => set({ ...v, sealText })} />
+            <Field label="Tiêu đề" value={v.title} onChange={(title) => set({ ...v, title })} />
+            <Field label="Phụ đề" value={v.subtitle} onChange={(subtitle) => set({ ...v, subtitle })} />
+            <Field label="Chữ con dấu (dự phòng)" value={v.sealText} onChange={(sealText) => set({ ...v, sealText })} />
             {v.images.map((img, i) => (
               <div key={img.id} className="rounded-xl bg-[#f8f8f8] p-3">
+                <div className="mb-2 flex gap-2">
+                  <button type="button" onClick={() => set({ ...v, images: move(v.images, i, -1) })}><ArrowUp size={16} /></button>
+                  <button type="button" onClick={() => set({ ...v, images: move(v.images, i, 1) })}><ArrowDown size={16} /></button>
+                  <button type="button" onClick={() => set({ ...v, images: v.images.filter((x) => x.id !== img.id) })}><Trash2 size={16} /></button>
+                </div>
                 <ImageField label={`Ảnh ${i + 1}`} value={img.src} onChange={(src) => { const images = [...v.images]; images[i] = { ...img, src }; set({ ...v, images }); }} />
-                <div className="mt-2"><Field label="Mô tả alt" value={img.alt} onChange={(alt) => { const images = [...v.images]; images[i] = { ...img, alt }; set({ ...v, images }); }} /></div>
+                <div className="mt-2 grid gap-2">
+                  <Field label="Chú thích" value={img.alt} onChange={(alt) => { const images = [...v.images]; images[i] = { ...img, alt }; set({ ...v, images }); }} />
+                  <Field
+                    label="Link sản phẩm chi tiết"
+                    value={img.href || ""}
+                    onChange={(href) => { const images = [...v.images]; images[i] = { ...img, href }; set({ ...v, images }); }}
+                    hint="Ví dụ: /san-pham/hong-tra-tai-phat"
+                  />
+                </div>
               </div>
             ))}
             <button type="button" className="text-sm font-semibold text-[#3f7d3a]" onClick={() => set({ ...v, images: [...v.images, newImage()] })}>Thêm ảnh</button>
@@ -232,13 +260,18 @@ export function GalleryEditor({ initial }: { initial: BannerData["gallery"] }) {
 
 export function FlavorEditor({ initial }: { initial: BannerData["flavor"] }) {
   return (
-    <SectionForm sectionKey="flavor" title="Hương vị đậm đà" description="Chữ dưới hai ảnh gallery. Ảnh phải có card trắng đè lên." initial={initial}>
+    <SectionForm
+      sectionKey="flavor"
+      title="Mô tả hồng trà / trà lài"
+      description="Chữ mô tả cạnh hai sản phẩm xen kẽ trên trang chủ."
+      initial={initial}
+    >
       {(v, set) => (
         <AdminCard title="Hai khối chữ">
           <div className="grid gap-4">
-            <Field label="Tiêu đề ảnh trái" value={v.leftTitle} onChange={(leftTitle) => set({ ...v, leftTitle })} multiline />
-            <Field label="Ghi chú ảnh trái" value={v.leftNote} onChange={(leftNote) => set({ ...v, leftNote })} multiline />
-            <Field label="Card đè ảnh phải" value={v.rightCard} onChange={(rightCard) => set({ ...v, rightCard })} multiline />
+            <Field label="Tiêu đề sản phẩm 1" value={v.leftTitle} onChange={(leftTitle) => set({ ...v, leftTitle })} multiline />
+            <Field label="Mô tả sản phẩm 1" value={v.leftNote} onChange={(leftNote) => set({ ...v, leftNote })} multiline />
+            <Field label="Mô tả sản phẩm 2" value={v.rightCard} onChange={(rightCard) => set({ ...v, rightCard })} multiline />
           </div>
         </AdminCard>
       )}
@@ -248,10 +281,15 @@ export function FlavorEditor({ initial }: { initial: BannerData["flavor"] }) {
 
 export function MarqueeEditor({ initial }: { initial: BannerData["marquee"] }) {
   return (
-    <SectionForm sectionKey="marquee" title="Thanh chữ chạy" initial={initial}>
+    <SectionForm
+      sectionKey="marquee"
+      title="Thanh chữ chạy (ẩn trên trang chủ)"
+      description="Khối này không hiển thị trên layout catalogue hiện tại — vẫn lưu được để dùng lại sau."
+      initial={initial}
+    >
       {(v, set) => (
         <AdminCard title="Nội dung marquee">
-          <Field label="Chữ chạy" value={v.text} onChange={(text) => set({ ...v, text })} hint="Nền đỏ, lặp vô hạn. Dấu * được thêm tự động." />
+          <Field label="Chữ chạy" value={v.text} onChange={(text) => set({ ...v, text })} hint="Hiện đang ẩn trên trang chủ." />
         </AdminCard>
       )}
     </SectionForm>
@@ -260,9 +298,14 @@ export function MarqueeEditor({ initial }: { initial: BannerData["marquee"] }) {
 
 export function IdentityEditor({ initial }: { initial: BannerData["identity"] }) {
   return (
-    <SectionForm sectionKey="identity" title="Bản sắc và phong vị" initial={initial}>
+    <SectionForm
+      sectionKey="identity"
+      title="Bản sắc (ẩn trên trang chủ)"
+      description="Khối này không hiển thị trên layout catalogue hiện tại."
+      initial={initial}
+    >
       {(v, set) => (
-        <AdminCard title="Tiêu đề và 3 ảnh">
+        <AdminCard title="Tiêu đề và ảnh">
           <div className="grid gap-4">
             <Field label="Tiêu đề" value={v.title} onChange={(title) => set({ ...v, title })} />
             <Field label="Mô tả" value={v.description} onChange={(description) => set({ ...v, description })} multiline rows={4} />
@@ -279,16 +322,21 @@ export function IdentityEditor({ initial }: { initial: BannerData["identity"] })
 
 export function ExclusiveEditor({ initial }: { initial: BannerData["exclusive"] }) {
   return (
-    <SectionForm sectionKey="exclusive" title="Combo Hồng Trà & Trà Lài" initial={initial}>
+    <SectionForm
+      sectionKey="exclusive"
+      title="Combo Hồng Trà & Trà Lài"
+      description="Khối nền đỏ trên trang chủ. Ảnh bo góc; bấm ảnh sẽ mở sản phẩm liên quan / link nút."
+      initial={initial}
+    >
       {(v, set) => (
-        <AdminCard title="Khối chữ và ảnh oval">
+        <AdminCard title="Nội dung combo">
           <div className="grid gap-4">
             <Field label="Tiêu đề" value={v.title} onChange={(title) => set({ ...v, title })} />
-            <Field label="Dòng nhấn" value={v.highlight} onChange={(highlight) => set({ ...v, highlight })} multiline />
+            <Field label="Dòng nhấn (giá / ưu đãi)" value={v.highlight} onChange={(highlight) => set({ ...v, highlight })} multiline />
             <Field label="Mô tả" value={v.description} onChange={(description) => set({ ...v, description })} multiline />
             <Field label="Nút" value={v.ctaLabel} onChange={(ctaLabel) => set({ ...v, ctaLabel })} />
             <Field label="Link nút" value={v.ctaHref} onChange={(ctaHref) => set({ ...v, ctaHref })} />
-            <ImageField label="Ảnh oval" value={v.image} onChange={(image) => set({ ...v, image })} />
+            <ImageField label="Ảnh combo (bo góc trên trang chủ)" value={v.image} onChange={(image) => set({ ...v, image })} />
           </div>
         </AdminCard>
       )}
@@ -330,7 +378,12 @@ export function ReviewsEditor({ initial }: { initial: BannerData["reviews"] }) {
 
 export function FaqEditor({ initial }: { initial: BannerData["faq"] }) {
   return (
-    <SectionForm sectionKey="faq" title="FAQ" initial={initial}>
+    <SectionForm
+      sectionKey="faq"
+      title="FAQ (ẩn trên trang chủ)"
+      description="Khối này không hiển thị trên layout catalogue hiện tại."
+      initial={initial}
+    >
       {(v, set) => (
         <>
           <AdminCard title="Cột trái">
@@ -361,7 +414,12 @@ export function FaqEditor({ initial }: { initial: BannerData["faq"] }) {
 
 export function CtaEditor({ initial }: { initial: BannerData["cta"] }) {
   return (
-    <SectionForm sectionKey="cta" title="Banner đồi trà" initial={initial}>
+    <SectionForm
+      sectionKey="cta"
+      title="Banner CTA"
+      description="Banner cuối trang chủ — ảnh bo góc lớn."
+      initial={initial}
+    >
       {(v, set) => (
         <AdminCard title="Banner CTA">
           <div className="grid gap-4">
@@ -370,7 +428,7 @@ export function CtaEditor({ initial }: { initial: BannerData["cta"] }) {
             <Field label="Phụ đề" value={v.subtitle} onChange={(subtitle) => set({ ...v, subtitle })} />
             <Field label="Nút" value={v.ctaLabel} onChange={(ctaLabel) => set({ ...v, ctaLabel })} />
             <Field label="Link" value={v.ctaHref} onChange={(ctaHref) => set({ ...v, ctaHref })} />
-            <Field label="Chữ con dấu" value={v.sealText} onChange={(sealText) => set({ ...v, sealText })} />
+            <Field label="Chữ con dấu (dự phòng)" value={v.sealText} onChange={(sealText) => set({ ...v, sealText })} />
           </div>
         </AdminCard>
       )}

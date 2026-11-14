@@ -50,6 +50,24 @@ body {
 }
 .rise { animation: rise 0.8s ease both; }
 
+/* Subtle tea-paper texture for cream catalogue bands */
+.bg-tea-paper {
+  background-color: #fbf4ec;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(139, 30, 31, 0.055) 1px, transparent 0),
+    radial-gradient(circle at 12px 18px, rgba(138, 75, 42, 0.04) 1.2px, transparent 0),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 40%, rgba(139, 30, 31, 0.025));
+  background-size: 28px 28px, 36px 36px, 100% 100%;
+}
+
+.bg-wine-texture {
+  background-color: #8b1e1f;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.07) 1px, transparent 0),
+    linear-gradient(135deg, rgba(0, 0, 0, 0.12), transparent 45%, rgba(230, 195, 106, 0.08));
+  background-size: 22px 22px, 100% 100%;
+}
+
 .rich p { margin: 0 0 0.9rem; line-height: 1.75; }
 .rich h2 { font-family: var(--font-display), Georgia, serif; color: #8b1e1f; font-size: 1.6rem; margin: 1.4rem 0 0.6rem; }
 .rich ul { padding-left: 1.2rem; }
