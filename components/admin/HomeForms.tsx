@@ -14,6 +14,7 @@ import {
   newImage,
   newLink,
   newReview,
+  newSpecRow,
   newTag,
   type BannerData,
   type HomeSectionKey,
@@ -339,6 +340,51 @@ export function ExclusiveEditor({ initial }: { initial: BannerData["exclusive"] 
             <ImageField label="Ảnh combo (bo góc trên trang chủ)" value={v.image} onChange={(image) => set({ ...v, image })} />
           </div>
         </AdminCard>
+      )}
+    </SectionForm>
+  );
+}
+
+export function SpecsEditor({ initial }: { initial: BannerData["specs"] }) {
+  return (
+    <SectionForm
+      sectionKey="specs"
+      title="Thông số sản phẩm"
+      description="Bảng giá / quy cách trên trang chủ: Mô tả · Xuất xứ · Đơn vị / QC đóng thùng · Hạn sử dụng · Giá bán."
+      initial={initial}
+    >
+      {(v, set) => (
+        <>
+          <AdminCard title="Tiêu đề khối">
+            <div className="grid gap-4">
+              <Field label="Tiêu đề" value={v.title} onChange={(title) => set({ ...v, title })} />
+              <Field label="Mô tả" value={v.description} onChange={(description) => set({ ...v, description })} multiline />
+            </div>
+          </AdminCard>
+          {v.rows.map((row, i) => (
+            <AdminCard key={row.id} title={row.name || `Dòng ${i + 1}`}>
+              <div className="mb-3 flex gap-2">
+                <button type="button" onClick={() => set({ ...v, rows: move(v.rows, i, -1) })}><ArrowUp size={16} /></button>
+                <button type="button" onClick={() => set({ ...v, rows: move(v.rows, i, 1) })}><ArrowDown size={16} /></button>
+                <button type="button" onClick={() => set({ ...v, rows: v.rows.filter((x) => x.id !== row.id) })}><Trash2 size={16} /></button>
+              </div>
+              <div className="grid gap-3 md:grid-cols-2">
+                <Field label="Mô tả (tên sản phẩm)" value={row.name} onChange={(name) => { const rows = [...v.rows]; rows[i] = { ...row, name }; set({ ...v, rows }); }} />
+                <Field label="Xuất xứ" value={row.origin} onChange={(origin) => { const rows = [...v.rows]; rows[i] = { ...row, origin }; set({ ...v, rows }); }} />
+                <Field label="Đơn vị / QC đóng thùng" value={row.packing} onChange={(packing) => { const rows = [...v.rows]; rows[i] = { ...row, packing }; set({ ...v, rows }); }} />
+                <Field label="Hạn sử dụng" value={row.shelfLife} onChange={(shelfLife) => { const rows = [...v.rows]; rows[i] = { ...row, shelfLife }; set({ ...v, rows }); }} />
+                <Field label="Giá bán (số, không cần VNĐ)" value={row.price} onChange={(price) => { const rows = [...v.rows]; rows[i] = { ...row, price }; set({ ...v, rows }); }} hint="Ví dụ: 69.000" />
+              </div>
+            </AdminCard>
+          ))}
+          <button
+            type="button"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-[#3f7d3a]"
+            onClick={() => set({ ...v, rows: [...v.rows, newSpecRow()] })}
+          >
+            <Plus size={14} /> Thêm dòng
+          </button>
+        </>
       )}
     </SectionForm>
   );

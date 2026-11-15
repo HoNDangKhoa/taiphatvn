@@ -12,6 +12,7 @@ import {
   MarqueeEditor,
   ProductsSectionEditor,
   ReviewsEditor,
+  SpecsEditor,
   StoryEditor,
 } from "@/components/admin/HomeForms";
 import { getBanner } from "@/lib/queries";
@@ -29,6 +30,7 @@ export default async function HomeSectionPage({ params }: { params: Promise<{ se
     case "marquee": return <MarqueeEditor initial={b.marquee} />;
     case "identity": return <IdentityEditor initial={b.identity} />;
     case "exclusive": return <ExclusiveEditor initial={b.exclusive} />;
+    case "specs": return <SpecsEditor initial={b.specs} />;
     case "reviews": return <ReviewsEditor initial={b.reviews} />;
     case "faq": return <FaqEditor initial={b.faq} />;
     case "cta": return <CtaEditor initial={b.cta} />;

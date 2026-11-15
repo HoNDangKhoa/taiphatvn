@@ -71,6 +71,21 @@ export type ExclusiveContent = {
   image: string;
 };
 
+export type SpecRow = {
+  id: string;
+  name: string;
+  origin: string;
+  packing: string;
+  shelfLife: string;
+  price: string;
+};
+
+export type SpecsContent = {
+  title: string;
+  description: string;
+  rows: SpecRow[];
+};
+
 export type ReviewItem = { id: string; name: string; content: string; image: string };
 export type ReviewsContent = { title: string; description: string; items: ReviewItem[] };
 
@@ -146,6 +161,7 @@ export type BannerData = {
   marquee: MarqueeContent;
   identity: IdentityContent;
   exclusive: ExclusiveContent;
+  specs: SpecsContent;
   reviews: ReviewsContent;
   faq: FaqContent;
   cta: CtaContent;
@@ -255,6 +271,28 @@ export function defaultBanner(): BannerData {
       ctaHref: "/gio-hang",
       image: "/media/hop-bon.jpg",
     },
+    specs: {
+      title: "Thông số sản phẩm",
+      description: "Quy cách đóng gói và thông tin dùng cho quán / pha chế.",
+      rows: [
+        {
+          id: "s1",
+          name: "Hồng Trà Tài Phát Kim Khánh",
+          origin: "Việt Nam",
+          packing: "Gói 500g × 24",
+          shelfLife: "12 tháng",
+          price: "69.000",
+        },
+        {
+          id: "s2",
+          name: "Trà Lài Tài Phát",
+          origin: "Việt Nam",
+          packing: "Gói 500g × 24",
+          shelfLife: "12 tháng",
+          price: "75.000",
+        },
+      ],
+    },
     reviews: {
       title: "Khách đánh giá",
       description: "Phản hồi từ quán và khách pha chế mỗi ngày.",
@@ -363,6 +401,11 @@ export function parseBanner(raw?: string | null): BannerData {
       marquee: { ...base.marquee, ...data.marquee },
       identity: { ...base.identity, ...data.identity, images: data.identity?.images?.length ? data.identity.images : base.identity.images },
       exclusive: { ...base.exclusive, ...data.exclusive },
+      specs: {
+        ...base.specs,
+        ...data.specs,
+        rows: data.specs?.rows?.length ? data.specs.rows : base.specs.rows,
+      },
       reviews: { ...base.reviews, ...data.reviews, items: data.reviews?.items?.length ? data.reviews.items : base.reviews.items },
       faq: { ...base.faq, ...data.faq, items: data.faq?.items?.length ? data.faq.items : base.faq.items },
       cta: { ...base.cta, ...data.cta },
@@ -390,4 +433,14 @@ export function newReview(): ReviewItem {
 }
 export function newFaq(): FaqItem {
   return { id: uid("faq"), question: "Câu hỏi mới", answer: "" };
+}
+export function newSpecRow(): SpecRow {
+  return {
+    id: uid("spec"),
+    name: "Sản phẩm mới",
+    origin: "Việt Nam",
+    packing: "Gói 500g × 24",
+    shelfLife: "12 tháng",
+    price: "",
+  };
 }

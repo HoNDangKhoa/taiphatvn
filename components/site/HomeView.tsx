@@ -11,15 +11,6 @@ type Brand = {
   logoUrl: string;
 };
 
-const SPEC_ROWS = [
-  { label: "Thành phần", value: "100% lá trà chọn lọc (hồng trà / trà lài)" },
-  { label: "Khối lượng", value: "250g · 500g / gói" },
-  { label: "Xuất xứ", value: "Đồi chè cao — Tây Bắc, Việt Nam" },
-  { label: "Công dụng", value: "Nguyên liệu trà sữa, trà trái cây, pha nóng / ủ lạnh" },
-  { label: "Combo", value: "2 gói (~1kg) · khoảng 140.000 VNĐ" },
-  { label: "Bảo quản", value: "Khô ráo, thoáng mát, tránh nắng và mùi lạ" },
-];
-
 export function HomeView({
   banner,
   products,
@@ -40,7 +31,7 @@ export function HomeView({
       </div>
       <Combo banner={banner} products={products} />
       <div className="bg-tea-paper">
-        <Specs />
+        <Specs banner={banner} />
         <FruitGallery banner={banner} products={products} />
         <Quotes banner={banner} />
       </div>
@@ -229,22 +220,34 @@ function Combo({ banner, products }: { banner: BannerData; products: ProductView
   );
 }
 
-function Specs() {
+function Specs({ banner }: { banner: BannerData }) {
+  const s = banner.specs;
+  if (!s?.rows?.length) return null;
   return (
-    <section className="mx-auto max-w-[900px] px-5 py-14 md:px-8">
-      <h2 className="font-display text-center text-3xl text-[#8B1E1F] uppercase md:text-4xl">
-        Thông số sản phẩm
-      </h2>
-      <p className="mx-auto mt-3 max-w-xl text-center text-sm leading-7 text-[#6d564c]">
-        Quy cách đóng gói và thông tin dùng cho quán / pha chế.
-      </p>
-      <div className="mt-8 overflow-hidden rounded-2xl border border-[#e5d8cc] bg-white/50 backdrop-blur-[2px]">
-        <table className="w-full text-left text-sm">
+    <section className="mx-auto max-w-[1100px] px-5 py-14 md:px-8">
+      <h2 className="font-display text-center text-3xl text-[#8B1E1F] uppercase md:text-4xl">{s.title}</h2>
+      <p className="mx-auto mt-3 max-w-xl text-center text-sm leading-7 text-[#6d564c]">{s.description}</p>
+      <div className="mt-8 overflow-x-auto rounded-2xl border border-[#e5d8cc] bg-white/60 backdrop-blur-[2px]">
+        <table className="w-full min-w-[640px] border-collapse text-left text-sm">
+          <thead>
+            <tr className="bg-[#8B1E1F] text-white">
+              <th className="px-4 py-3.5 font-semibold md:px-5">Mô tả</th>
+              <th className="px-4 py-3.5 font-semibold md:px-5">Xuất xứ</th>
+              <th className="px-4 py-3.5 font-semibold md:px-5">Đơn vị / QC đóng thùng</th>
+              <th className="px-4 py-3.5 font-semibold md:px-5">Hạn sử dụng</th>
+              <th className="px-4 py-3.5 text-right font-semibold md:px-5">Giá bán</th>
+            </tr>
+          </thead>
           <tbody>
-            {SPEC_ROWS.map((row, i) => (
-              <tr key={row.label} className={i % 2 === 0 ? "bg-white/60" : "bg-[#F3EBE1]/70"}>
-                <th className="w-[36%] px-4 py-3.5 font-semibold text-[#8B1E1F] md:px-5">{row.label}</th>
-                <td className="px-4 py-3.5 text-[#5c463c] md:px-5">{row.value}</td>
+            {s.rows.map((row, i) => (
+              <tr key={row.id} className={i % 2 === 0 ? "bg-white/70" : "bg-[#F3EBE1]/80"}>
+                <td className="px-4 py-3.5 font-semibold text-[#8B1E1F] uppercase md:px-5">{row.name}</td>
+                <td className="px-4 py-3.5 text-[#5c463c] md:px-5">{row.origin}</td>
+                <td className="px-4 py-3.5 text-[#5c463c] md:px-5">{row.packing}</td>
+                <td className="px-4 py-3.5 text-[#5c463c] md:px-5">{row.shelfLife}</td>
+                <td className="px-4 py-3.5 text-right font-semibold tabular-nums text-[#8B1E1F] md:px-5">
+                  {row.price ? `${row.price} VNĐ` : "Liên hệ"}
+                </td>
               </tr>
             ))}
           </tbody>
