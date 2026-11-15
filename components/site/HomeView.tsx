@@ -132,10 +132,11 @@ function CatalogRows({ banner, products }: { banner: BannerData; products: Produ
       <div className="space-y-16 md:space-y-20">
         {products.map((product, i) => {
           const flip = i % 2 === 1;
-          const note =
-            i === 0
-              ? banner.flavor.leftNote || product.summary
-              : banner.flavor.rightCard || product.summary;
+          const note = stripHtml(product.summary) || (i === 0 ? banner.flavor.leftNote : banner.flavor.rightCard) || "";
+          const displayPrice =
+            product.variants.find((v) => /500\s*g/i.test(v.name))?.price ??
+            product.variants[0]?.price ??
+            product.price;
           const href = `/san-pham/${product.slug}`;
           return (
             <article
@@ -160,9 +161,9 @@ function CatalogRows({ banner, products }: { banner: BannerData; products: Produ
                     {product.name}
                   </Link>
                 </h3>
-                <p className="mt-4 text-sm leading-7 text-[#6d564c]">{stripHtml(note || product.summary)}</p>
+                <p className="mt-4 text-sm leading-7 text-[#6d564c]">{note}</p>
                 <p className="mt-5 text-lg font-semibold tracking-wide text-[#8B1E1F]">
-                  {formatPrice(product.price)}
+                  {formatPrice(displayPrice)}
                 </p>
                 <Link
                   href={href}

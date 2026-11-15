@@ -10,7 +10,9 @@ import { useCart } from "@/components/cart/CartProvider";
 export function BuyBox({ product }: { product: ProductView }) {
   const cart = useCart();
   const router = useRouter();
-  const [variantId, setVariantId] = useState(product.variants[0]?.id || "");
+  const [variantId, setVariantId] = useState(
+    product.variants.find((v) => /500\s*g/i.test(v.name))?.id || product.variants[0]?.id || "",
+  );
   const [qty, setQty] = useState(1);
   const [note, setNote] = useState("");
   const variant = product.variants.find((v) => v.id === variantId);

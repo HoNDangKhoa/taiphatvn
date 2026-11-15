@@ -12,6 +12,7 @@ type Product = {
   price: number;
   image: string;
   categoryName: string;
+  variants?: { name: string; price: number }[];
 };
 
 type Category = { id: string; name: string; slug: string };
@@ -58,7 +59,12 @@ export function ProductsCatalog({ products, categories }: { products: Product[];
         ))}
       </div>
       <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        {list.map((p) => (
+        {list.map((p) => {
+          const price =
+            p.variants?.find((v) => /500\s*g/i.test(v.name))?.price ??
+            p.variants?.[0]?.price ??
+            p.price;
+          return (
           <Link key={p.id} href={`/san-pham/${p.slug}`} prefetch className="group text-center">
             <p className="text-xs font-semibold tracking-[0.16em] uppercase">{p.label}</p>
             <img
@@ -69,9 +75,10 @@ export function ProductsCatalog({ products, categories }: { products: Product[];
               decoding="async"
             />
             <h2 className="mt-2 font-semibold text-[#8B1E1F]">{p.name}</h2>
-            <p className="text-sm font-semibold text-[#8B1E1F]">{formatPrice(p.price)}</p>
+            <p className="text-sm font-semibold text-[#8B1E1F]">{formatPrice(price)}</p>
           </Link>
-        ))}
+          );
+        })}
       </div>
       {!list.length && (
         <p className="py-12 text-center text-sm text-[#6d564c]">Chưa có sản phẩm trong danh mục này.</p>

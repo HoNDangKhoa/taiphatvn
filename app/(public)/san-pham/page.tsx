@@ -25,6 +25,7 @@ export default async function ProductsPage() {
             price: p.price,
             image: p.image,
             categoryName: p.categoryName,
+            variants: p.variants.map((v) => ({ name: v.name, price: v.price })),
           }))}
           categories={categories.map((c) => ({ id: c.id, name: c.name, slug: c.slug }))}
         />
