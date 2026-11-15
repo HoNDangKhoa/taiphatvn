@@ -390,28 +390,33 @@ function Recipes({ banner }: { banner: BannerData }) {
 
       {active && (
         <div
-          className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 p-3 sm:p-6"
+          className="fixed inset-0 z-[80] overflow-y-auto overscroll-contain bg-black/80"
           role="dialog"
           aria-modal="true"
           aria-label={active.title}
           onClick={() => setActive(null)}
         >
-          <div
-            className="relative max-h-[92vh] w-full max-w-3xl overflow-auto rounded-2xl bg-[#1a2e1a] shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="sticky top-0 z-20 flex justify-end px-3 py-3 sm:px-5">
             <button
               type="button"
               aria-label="Đóng"
               onClick={() => setActive(null)}
-              className="absolute top-3 right-3 z-10 grid h-10 w-10 place-items-center rounded-full bg-black/50 text-white"
+              className="grid h-11 w-11 place-items-center rounded-full bg-white/95 text-[#1a2e1a] shadow-lg"
             >
-              <X size={18} />
+              <X size={20} />
             </button>
+          </div>
+          <div
+            className="mx-auto flex w-full max-w-[920px] justify-center px-3 pb-10 sm:px-5"
+            onClick={(e) => e.stopPropagation()}
+          >
             <img
               src={active.src}
               alt={active.alt || active.title}
-              className="mx-auto h-auto w-full object-contain"
+              className="h-auto w-full max-w-full rounded-xl bg-[#0f1f12] object-contain shadow-2xl"
+              style={{ imageRendering: "auto" }}
+              decoding="async"
+              fetchPriority="high"
             />
           </div>
         </div>
