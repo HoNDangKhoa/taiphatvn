@@ -86,6 +86,19 @@ export type SpecsContent = {
   rows: SpecRow[];
 };
 
+export type RecipeItem = {
+  id: string;
+  title: string;
+  src: string;
+  alt: string;
+};
+
+export type RecipesContent = {
+  title: string;
+  description: string;
+  items: RecipeItem[];
+};
+
 export type ReviewItem = { id: string; name: string; content: string; image: string };
 export type ReviewsContent = { title: string; description: string; items: ReviewItem[] };
 
@@ -163,6 +176,7 @@ export type BannerData = {
   exclusive: ExclusiveContent;
   specs: SpecsContent;
   reviews: ReviewsContent;
+  recipes: RecipesContent;
   faq: FaqContent;
   cta: CtaContent;
   footer: FooterContent;
@@ -317,6 +331,23 @@ export function defaultBanner(): BannerData {
         },
       ],
     },
+    recipes: {
+      title: "Công thức pha trà",
+      description: "Gợi ý pha chế từ trà Kim Khánh — chạm vào ảnh để xem rõ nguyên liệu và các bước.",
+      items: [
+        {
+          id: "rc1",
+          title: "Trà Chanh",
+          src: "/media/recipes/tra-chanh.png",
+          alt: "Công thức Trà Chanh — đặc sản trà Lâm Đồng",
+        },
+        { id: "rc2", title: "Trà Đào", src: "", alt: "Công thức Trà Đào" },
+        { id: "rc3", title: "Trà Tắc", src: "", alt: "Công thức Trà Tắc" },
+        { id: "rc4", title: "Trà Sữa", src: "", alt: "Công thức Trà Sữa" },
+        { id: "rc5", title: "Trà Ổi Hồng", src: "", alt: "Công thức Trà Ổi Hồng" },
+        { id: "rc6", title: "Trà Lựu Đỏ", src: "", alt: "Công thức Trà Lựu Đỏ" },
+      ],
+    },
     faq: {
       title: "FAQ",
       description: FLAVOR,
@@ -407,6 +438,11 @@ export function parseBanner(raw?: string | null): BannerData {
         rows: data.specs?.rows?.length ? data.specs.rows : base.specs.rows,
       },
       reviews: { ...base.reviews, ...data.reviews, items: data.reviews?.items?.length ? data.reviews.items : base.reviews.items },
+      recipes: {
+        ...base.recipes,
+        ...data.recipes,
+        items: data.recipes?.items?.length ? data.recipes.items : base.recipes.items,
+      },
       faq: { ...base.faq, ...data.faq, items: data.faq?.items?.length ? data.faq.items : base.faq.items },
       cta: { ...base.cta, ...data.cta },
       footer: { ...base.footer, ...data.footer, links: data.footer?.links?.length ? data.footer.links : base.footer.links },
@@ -443,4 +479,7 @@ export function newSpecRow(): SpecRow {
     shelfLife: "12 tháng",
     price: "",
   };
+}
+export function newRecipe(): RecipeItem {
+  return { id: uid("recipe"), title: "Công thức mới", src: "", alt: "" };
 }

@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Phone, ShoppingBag } from "lucide-react";
-import type { BannerData, GalleryImage } from "@/lib/home";
+import { useEffect, useState } from "react";
+import { ArrowRight, Phone, ShoppingBag, X } from "lucide-react";
+import type { BannerData, GalleryImage, RecipeItem } from "@/lib/home";
 import type { ProductView } from "@/lib/queries";
 import { formatPrice, stripHtml, telHref } from "@/lib/utils";
 
@@ -34,6 +35,7 @@ export function HomeView({
         <Specs banner={banner} />
         <FruitGallery banner={banner} products={products} />
         <Quotes banner={banner} />
+        <Recipes banner={banner} />
       </div>
       <Cta banner={banner} />
     </div>
@@ -332,6 +334,88 @@ function Quotes({ banner }: { banner: BannerData }) {
           </blockquote>
         ))}
       </div>
+    </section>
+  );
+}
+
+function Recipes({ banner }: { banner: BannerData }) {
+  const items = (banner.recipes?.items || []).filter((item) => item.src);
+  const [active, setActive] = useState<RecipeItem | null>(null);
+
+  useEffect(() => {
+    if (!active) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setActive(null);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [active]);
+
+  if (!items.length) return null;
+
+  return (
+    <section className="mx-auto max-w-[1100px] px-5 pb-16 md:px-8">
+      <h2 className="font-display text-center text-3xl text-[#8B1E1F] uppercase md:text-4xl">
+        {banner.recipes.title}
+      </h2>
+      <p className="mx-auto mt-3 max-w-2xl text-center text-sm leading-7 text-[#6d564c]">
+        {banner.recipes.description}
+      </p>
+      <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+        {items.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => setActive(item)}
+            className="group overflow-hidden rounded-3xl bg-[#F3EBE1]/80 text-left shadow-[0_8px_24px_rgba(90,40,30,.06)] transition hover:-translate-y-0.5 hover:shadow-[0_14px_28px_rgba(90,40,30,.1)]"
+          >
+            <img
+              src={item.src}
+              alt={item.alt || item.title}
+              className="aspect-[3/4] w-full object-cover object-top transition duration-300 group-hover:scale-[1.02]"
+              loading="lazy"
+              decoding="async"
+            />
+            <div className="px-4 py-3">
+              <p className="font-display text-lg text-[#8B1E1F] uppercase">{item.title}</p>
+              <p className="mt-0.5 text-xs font-semibold tracking-wide text-[#8A4B2A] uppercase">Xem công thức</p>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      {active && (
+        <div
+          className="fixed inset-0 z-[80] flex items-center justify-center bg-black/70 p-3 sm:p-6"
+          role="dialog"
+          aria-modal="true"
+          aria-label={active.title}
+          onClick={() => setActive(null)}
+        >
+          <div
+            className="relative max-h-[92vh] w-full max-w-3xl overflow-auto rounded-2xl bg-[#1a2e1a] shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              aria-label="Đóng"
+              onClick={() => setActive(null)}
+              className="absolute top-3 right-3 z-10 grid h-10 w-10 place-items-center rounded-full bg-black/50 text-white"
+            >
+              <X size={18} />
+            </button>
+            <img
+              src={active.src}
+              alt={active.alt || active.title}
+              className="mx-auto h-auto w-full object-contain"
+            />
+          </div>
+        </div>
+      )}
     </section>
   );
 }

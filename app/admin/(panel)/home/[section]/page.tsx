@@ -11,6 +11,7 @@ import {
   IdentityEditor,
   MarqueeEditor,
   ProductsSectionEditor,
+  RecipesEditor,
   ReviewsEditor,
   SpecsEditor,
   StoryEditor,
@@ -32,6 +33,7 @@ export default async function HomeSectionPage({ params }: { params: Promise<{ se
     case "exclusive": return <ExclusiveEditor initial={b.exclusive} />;
     case "specs": return <SpecsEditor initial={b.specs} />;
     case "reviews": return <ReviewsEditor initial={b.reviews} />;
+    case "recipes": return <RecipesEditor initial={b.recipes} />;
     case "faq": return <FaqEditor initial={b.faq} />;
     case "cta": return <CtaEditor initial={b.cta} />;
     case "footer": return <FooterEditor initial={b.footer} />;

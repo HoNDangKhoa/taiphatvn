@@ -13,6 +13,7 @@ import {
   newFaq,
   newImage,
   newLink,
+  newRecipe,
   newReview,
   newSpecRow,
   newTag,
@@ -416,6 +417,119 @@ export function ReviewsEditor({ initial }: { initial: BannerData["reviews"] }) {
             </AdminCard>
           ))}
           <button type="button" className="inline-flex items-center gap-1 text-sm font-semibold text-[#3f7d3a]" onClick={() => set({ ...v, items: [...v.items, newReview()] })}><Plus size={14} /> Thêm đánh giá</button>
+        </>
+      )}
+    </SectionForm>
+  );
+}
+
+export function RecipesEditor({ initial }: { initial: BannerData["recipes"] }) {
+  const [batchUploading, setBatchUploading] = useState(false);
+
+  return (
+    <SectionForm
+      sectionKey="recipes"
+      title="Công thức pha trà"
+      description="Khối giữa đánh giá và banner CTA. Grid 3 cột trên PC, 2 cột tablet, 1 cột mobile. Chỉ ảnh đã tải mới hiện trên trang chủ."
+      initial={initial}
+    >
+      {(v, set) => (
+        <>
+          <AdminCard title="Tiêu đề khối">
+            <div className="grid gap-4">
+              <Field label="Tiêu đề" value={v.title} onChange={(title) => set({ ...v, title })} />
+              <Field label="Mô tả" value={v.description} onChange={(description) => set({ ...v, description })} multiline />
+            </div>
+          </AdminCard>
+
+          <AdminCard title="Tải nhanh nhiều ảnh">
+            <p className="mb-3 text-sm text-ink/55">
+              Chọn tới 6 ảnh công thức cùng lúc — hệ thống gắn lần lượt vào các ô trống hoặc tạo ô mới.
+            </p>
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-black/10 bg-white px-4 py-2 text-sm font-semibold">
+              {batchUploading ? "Đang tải…" : "Tải nhiều ảnh công thức"}
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                className="hidden"
+                disabled={batchUploading}
+                onChange={async (e) => {
+                  const files = Array.from(e.target.files || []).slice(0, 6);
+                  if (!files.length) return;
+                  setBatchUploading(true);
+                  try {
+                    const urls: string[] = [];
+                    for (const file of files) {
+                      const body = new FormData();
+                      body.set("file", file);
+                      const res = await fetch("/api/upload", { method: "POST", body });
+                      const data = await res.json();
+                      if (data.url) urls.push(data.url);
+                    }
+                    if (!urls.length) return;
+                    const items = [...v.items];
+                    let ui = 0;
+                    for (let i = 0; i < items.length && ui < urls.length; i++) {
+                      if (!items[i].src) {
+                        const nameFromFile = files[ui]?.name?.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ") || items[i].title;
+                        items[i] = {
+                          ...items[i],
+                          src: urls[ui],
+                          title: items[i].title || nameFromFile,
+                          alt: items[i].alt || `Công thức ${nameFromFile}`,
+                        };
+                        ui++;
+                      }
+                    }
+                    while (ui < urls.length) {
+                      const nameFromFile = files[ui]?.name?.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ") || `Công thức ${ui + 1}`;
+                      items.push({
+                        ...newRecipe(),
+                        title: nameFromFile,
+                        src: urls[ui],
+                        alt: `Công thức ${nameFromFile}`,
+                      });
+                      ui++;
+                    }
+                    set({ ...v, items });
+                  } finally {
+                    setBatchUploading(false);
+                    e.target.value = "";
+                  }
+                }}
+              />
+            </label>
+          </AdminCard>
+
+          {v.items.map((item, i) => (
+            <AdminCard key={item.id} title={item.title || `Công thức ${i + 1}`}>
+              <div className="mb-3 flex gap-2">
+                <button type="button" onClick={() => set({ ...v, items: move(v.items, i, -1) })}><ArrowUp size={16} /></button>
+                <button type="button" onClick={() => set({ ...v, items: move(v.items, i, 1) })}><ArrowDown size={16} /></button>
+                <button type="button" onClick={() => set({ ...v, items: v.items.filter((x) => x.id !== item.id) })}><Trash2 size={16} /></button>
+              </div>
+              <div className="grid gap-3 md:grid-cols-[140px_1fr]">
+                {item.src ? (
+                  <img src={item.src} alt="" className="h-40 w-full rounded-xl object-cover object-top" />
+                ) : (
+                  <div className="grid h-40 place-items-center rounded-xl bg-[#f3f4f6] text-xs text-ink/40">Chưa có ảnh</div>
+                )}
+                <div className="grid gap-3">
+                  <Field label="Tên công thức" value={item.title} onChange={(title) => { const items = [...v.items]; items[i] = { ...item, title }; set({ ...v, items }); }} />
+                  <Field label="Alt / mô tả ảnh" value={item.alt} onChange={(alt) => { const items = [...v.items]; items[i] = { ...item, alt }; set({ ...v, items }); }} />
+                  <ImageField label="Ảnh poster công thức" value={item.src} onChange={(src) => { const items = [...v.items]; items[i] = { ...item, src }; set({ ...v, items }); }} />
+                </div>
+              </div>
+            </AdminCard>
+          ))}
+          <button
+            type="button"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-[#3f7d3a]"
+            onClick={() => set({ ...v, items: [...v.items, newRecipe()] })}
+          >
+            <Plus size={14} /> Thêm công thức
+          </button>
         </>
       )}
     </SectionForm>
