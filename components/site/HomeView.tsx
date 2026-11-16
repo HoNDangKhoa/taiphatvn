@@ -67,12 +67,15 @@ function resolveProductHref(img: GalleryImage, products: ProductView[]) {
 
 function Hero({ banner, brand }: { banner: BannerData; brand: Brand }) {
   const hero = banner.hero;
+  const bg = hero.image?.trim() || "/media/hill-bg.jpg";
   return (
     <section className="relative isolate min-h-[100svh] overflow-hidden">
       <img
-        src="/media/hill-bg.jpg"
+        src={bg}
         alt=""
         className="absolute inset-0 h-full w-full object-cover"
+        fetchPriority="high"
+        decoding="async"
       />
       <div className="absolute inset-0 bg-gradient-to-b from-[#1a0f0c]/55 via-[#1a0f0c]/35 to-[#1a0f0c]/70" />
       <div className="relative mx-auto flex min-h-[100svh] max-w-[1100px] flex-col items-center justify-center px-5 py-24 text-center text-white md:px-8">

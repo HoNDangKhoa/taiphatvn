@@ -44,7 +44,7 @@ export const adminNav: AdminNavItem[] = [
     icon: "home",
     children: [
       { label: "1. Thanh menu (Header)", href: "/admin/home/header" },
-      { label: "2. Hero / Banner", href: "/admin/home/hero" },
+      { label: "2. Hero / Ảnh liveshow", href: "/admin/home/hero" },
       { label: "3. Giới thiệu sản phẩm", href: "/admin/home/story" },
       { label: "4. Sản phẩm chủ lực", href: "/admin/home/products" },
       { label: "5. Mô tả hồng trà / trà lài", href: "/admin/home/flavor" },

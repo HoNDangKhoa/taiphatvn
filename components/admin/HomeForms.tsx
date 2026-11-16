@@ -129,10 +129,36 @@ export function HeaderEditor({ initial }: { initial: BannerData["header"] }) {
 
 export function HeroEditor({ initial }: { initial: BannerData["hero"] }) {
   return (
-    <SectionForm sectionKey="hero" title="Hero / Banner" description="Brand + tiêu đề trên nền đồi trà full-bleed. Ảnh hero riêng không dùng làm nền (nền cố định hill-bg)." initial={initial}>
+    <SectionForm
+      sectionKey="hero"
+      title="Hero / Banner liveshow"
+      description="Ảnh nền full-bleed phía sau logo + tiêu đề trang chủ. Tải ảnh ngang độ phân giải cao (Full HD trở lên) để hiển thị đẹp trên PC và mobile."
+      initial={initial}
+    >
       {(value, set) => (
         <>
-          <AdminCard title="Nội dung">
+          <AdminCard title="Ảnh nền liveshow">
+            <div className="grid gap-4">
+              <ImageField
+                label="Ảnh nền banner / liveshow"
+                value={value.image}
+                onChange={(image) => set({ ...value, image })}
+              />
+              {value.image ? (
+                <img
+                  src={value.image}
+                  alt="Xem trước nền liveshow"
+                  className="max-h-56 w-full rounded-xl object-cover"
+                />
+              ) : (
+                <p className="text-sm text-ink/45">Chưa có ảnh — trang chủ sẽ dùng /media/hill-bg.jpg.</p>
+              )}
+              <p className="text-xs text-ink/45">
+                Gợi ý: ảnh đồi trà ngang 1920×1080 trở lên. Sau khi tải, bấm Lưu để cập nhật trang chủ.
+              </p>
+            </div>
+          </AdminCard>
+          <AdminCard title="Nội dung chữ">
             <div className="grid gap-4">
               <Field label="Tiêu đề" value={value.title} onChange={(title) => set({ ...value, title })} />
               <Field label="Phụ đề" value={value.subtitle} onChange={(subtitle) => set({ ...value, subtitle })} />
@@ -142,7 +168,6 @@ export function HeroEditor({ initial }: { initial: BannerData["hero"] }) {
                 <Field label="Link nút đặc" value={value.primaryHref} onChange={(primaryHref) => set({ ...value, primaryHref })} />
                 <Field label="Hotline / nút viền" value={value.secondaryLabel} onChange={(secondaryLabel) => set({ ...value, secondaryLabel })} />
               </div>
-              <ImageField label="Ảnh sản phẩm" value={value.image} onChange={(image) => set({ ...value, image })} />
             </div>
           </AdminCard>
           <AdminCard title="3 thẻ tag">
