@@ -204,7 +204,14 @@ function Combo({ banner, products }: { banner: BannerData; products: ProductView
         <div>
           <p className="text-[11px] font-semibold tracking-[0.22em] text-[#E6C36A] uppercase">Ưu đãi combo</p>
           <h2 className="font-display mt-3 text-3xl uppercase md:text-5xl">{s.title}</h2>
-          <p className="mt-4 text-base font-semibold tracking-wide text-[#E6C36A]">{s.highlight}</p>
+          {s.highlight ? (
+            <p className="mt-4 text-base font-semibold tracking-wide text-[#E6C36A]">{s.highlight}</p>
+          ) : null}
+          {s.price ? (
+            <p className="mt-3 text-3xl font-semibold tabular-nums tracking-wide text-white md:text-4xl">
+              {/vnđ|vnd/i.test(s.price) ? s.price : `${s.price} VNĐ`}
+            </p>
+          ) : null}
           <p className="mt-4 max-w-md text-sm leading-7 text-white/90">{s.description}</p>
           <Link
             href={s.ctaHref || "/gio-hang"}

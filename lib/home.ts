@@ -65,6 +65,8 @@ export type IdentityContent = {
 export type ExclusiveContent = {
   title: string;
   highlight: string;
+  /** Combo price display, e.g. "140.000" — shown as "140.000 VNĐ" on homepage. */
+  price: string;
   description: string;
   ctaLabel: string;
   ctaHref: string;
@@ -278,7 +280,8 @@ export function defaultBanner(): BannerData {
     },
     exclusive: {
       title: "Combo Hồng Trà & Trà Lài",
-      highlight: "2 gói / khoảng 1kg · 140.000 VNĐ",
+      highlight: "2 gói / khoảng 1kg",
+      price: "140.000",
       description:
         "Kết hợp hồng trà đậm vị và trà lài hương hoa tạo lớp hương đa tầng — vừa pha trà sữa, vừa pha trà trái cây.",
       ctaLabel: "Đặt combo",
@@ -431,7 +434,11 @@ export function parseBanner(raw?: string | null): BannerData {
       flavor: { ...base.flavor, ...data.flavor },
       marquee: { ...base.marquee, ...data.marquee },
       identity: { ...base.identity, ...data.identity, images: data.identity?.images?.length ? data.identity.images : base.identity.images },
-      exclusive: { ...base.exclusive, ...data.exclusive },
+      exclusive: {
+        ...base.exclusive,
+        ...data.exclusive,
+        price: data.exclusive?.price ?? base.exclusive.price,
+      },
       specs: {
         ...base.specs,
         ...data.specs,

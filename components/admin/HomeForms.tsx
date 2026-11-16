@@ -352,14 +352,20 @@ export function ExclusiveEditor({ initial }: { initial: BannerData["exclusive"] 
     <SectionForm
       sectionKey="exclusive"
       title="Combo Hồng Trà & Trà Lài"
-      description="Khối nền đỏ trên trang chủ. Ảnh bo góc; bấm ảnh sẽ mở sản phẩm liên quan / link nút."
-      initial={initial}
+      description="Khối nền đỏ trên trang chủ. Nhập giá combo riêng — sẽ hiện nổi bật dưới dòng ưu đãi."
+      initial={{ ...initial, price: initial.price || "" }}
     >
       {(v, set) => (
         <AdminCard title="Nội dung combo">
           <div className="grid gap-4">
             <Field label="Tiêu đề" value={v.title} onChange={(title) => set({ ...v, title })} />
-            <Field label="Dòng nhấn (giá / ưu đãi)" value={v.highlight} onChange={(highlight) => set({ ...v, highlight })} multiline />
+            <Field label="Dòng nhấn / ưu đãi" value={v.highlight} onChange={(highlight) => set({ ...v, highlight })} multiline hint="Ví dụ: 2 gói / khoảng 1kg" />
+            <Field
+              label="Giá combo"
+              value={v.price || ""}
+              onChange={(price) => set({ ...v, price })}
+              hint="Chỉ nhập số, ví dụ: 140.000 — trang chủ tự thêm VNĐ"
+            />
             <Field label="Mô tả" value={v.description} onChange={(description) => set({ ...v, description })} multiline />
             <Field label="Nút" value={v.ctaLabel} onChange={(ctaLabel) => set({ ...v, ctaLabel })} />
             <Field label="Link nút" value={v.ctaHref} onChange={(ctaHref) => set({ ...v, ctaHref })} />
